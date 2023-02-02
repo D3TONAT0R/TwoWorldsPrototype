@@ -32,6 +32,9 @@ MonoBehaviour:
   enabled:
     overrideState: 1
     value: 1
+  ignoreGlobalSettings:
+    overrideState: 0
+    value: 0
   focusDistance:
     overrideState: 1
     value: 10
@@ -60,6 +63,9 @@ MonoBehaviour:
   enabled:
     overrideState: 1
     value: 1
+  ignoreGlobalSettings:
+    overrideState: 0
+    value: 0
   gradingMode:
     overrideState: 0
     value: 1
@@ -1370,7 +1376,10 @@ MonoBehaviour:
   active: 1
   enabled:
     overrideState: 1
-    value: 1
+    value: 0
+  ignoreGlobalSettings:
+    overrideState: 0
+    value: 0
   colored:
     overrideState: 0
     value: 1
