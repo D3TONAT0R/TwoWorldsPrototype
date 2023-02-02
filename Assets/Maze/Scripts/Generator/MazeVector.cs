@@ -22,6 +22,8 @@ namespace MazeGen {
 			set { Set(3, value); }
 		}
 
+		public bool Valid => vector != null && vector.Count > 0;
+
 		public int Dims {
 			get {
 				return vector.Count;
@@ -33,7 +35,7 @@ namespace MazeGen {
 				return Get(i);
 			}
 		}
-
+		
 		public MazeVector(params int[] vec) {
 			vector = new List<int>();
 			vector.AddRange(vec);

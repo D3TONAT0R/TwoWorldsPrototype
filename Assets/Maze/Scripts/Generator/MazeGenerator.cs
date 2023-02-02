@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using static MazeGen.Maze;
 
-namespace MazeGen {
-	public class MazeGenerator<T> where T : Maze, new() {
+namespace MazeGen
+{
+	public class MazeGenerator
+	{
 
 		public Random random;
 		public int seed;
@@ -18,84 +20,134 @@ namespace MazeGen {
 		public float mazeComplexity = 0.5f;
 		public int maxEmptySpaceFillIterations = 2;
 
-		private T maze;
+		public bool openStart = false;
+		public bool openEnd = true;
 
-		public MazeGenerator(params int[] size) {
+		private Maze maze;
+
+		public MazeGenerator(params int[] size)
+		{
 			seed = (int)(System.DateTime.Now.Ticks % 1000000);
 			dims = size.Length;
-			int[] l = new int[dims];
-			int[] u = new int[dims];
-			for(int i = 0; i < dims; i++) {
-				l[i] = (int)(-size[i] / 2f);
-				u[i] = (int)(size[i] / 2f);
+			var l = new int[dims];
+			var u = new int[dims];
+			for(int i = 0; i < dims; i++)
+			{
+				u[i] = size[i] - 1;
 			}
 			bounds = new MazeVectorBounds(new MazeVector(l), new MazeVector(u));
 			maxLengthInDim = new MazeVector(new int[dims]);
 		}
 
-		public T Generate(int dims, MazeVectorBounds bounds, out int attemptNum) {
+		public Maze Generate(bool requireValidMaze, out int attemptNum, int maxAttemptCount = 1000)
+		{
 			random = new Random(seed);
 			startPos = new MazeVector(new int[dims]);
-			this.bounds = bounds;
 			attemptNum = 0;
-			while(attemptNum < 5000) {
+			while(attemptNum < maxAttemptCount)
+			{
 				attemptNum++;
-				maze = new T();
-				maze.mazeBounds = bounds;
-				maze.mazemap.Add(startPos.ToString(), new MazePiece(dims, Facing.north)); //Every maze starts with a piece heading north
-				int length;
-				maze.startTile = startPos;
-				if(!Drunkard(startPos, Facing.north, 0, out length)) continue;
-				JoinPieces(startPos, Facing.north);
+				maze = new Maze(dims, bounds)
+				{
+					mazeBounds = bounds
+				};
+				var start = new MazePiece(dims, Facing.north); //Every maze starts with a piece heading north
+				maze.mazemap.Add(startPos.ToString(), start);
+				if(openStart)
+				{
+					maze.JoinPieces(startPos, Facing.south);
+				}
+				maze.startPosition = startPos;
+				if(!Drunkard(startPos, Facing.north, 0, out _) && requireValidMaze)
+				{
+					//Maze gen attempt failed, try again
+					continue;
+				}
+				if(maze.endPosition.Valid && openEnd)
+				{
+					maze.JoinPieces(maze.endPosition, Facing.north);
+				}
 				FillEmptySpaces(0);
-				maze.OnMazeGenerated();
 				return maze;
 			}
-			maze.OnMazeGenerated();
 			return maze;
 		}
 
-		private bool Drunkard(MazeVector startPos, Facing startFacing, int iteration, out int length) {
+		public void Breakup(float breakRate)
+		{
+			int breakCount = (int)(maze.TotalPieceCount * breakRate);
+			for(int i = 0; i < breakCount; i++)
+			{
+				var pos = new int[dims];
+				for(int d = 0; d < dims; d++)
+				{
+					//TODO: is only two dimensional for now
+					pos[d] = random.Next(maze.mazeBounds.lower[d], maze.mazeBounds.upper[d] - 1);
+					bool b = Chance(0.5f);
+					if(b)
+					{
+						maze.JoinPieces(new MazeVector(pos), Facing.north);
+					}
+					else
+					{
+						maze.JoinPieces(new MazeVector(pos), Facing.east);
+					}
+				}
+			}
+		}
+
+		private bool Drunkard(MazeVector startPos, Facing? startFacing, int iteration, out int length)
+		{
 			length = 0;
-			Facing facing = startFacing;
+			Facing facing = startFacing ?? PickRandomValidDir(startPos);
 			var pos = startPos;
 			int lengthInDim = 0;
-			while(length < 1000) {
+			while(length < 1000)
+			{
 				bool pickNew = false;
-				if((Chance(mazeComplexity) || length == 0) && !(iteration != 0 && length == 0)) {
+				if((Chance(mazeComplexity) || length == 0) && !(iteration != 0 && length == 0))
+				{
 					pickNew = true;
-				} else {
-					if(maxLengthInDim[facing.dim] > 0 && lengthInDim >= maxLengthInDim[facing.dim]) {
+				}
+				else
+				{
+					if(maxLengthInDim[facing.dim] > 0 && lengthInDim >= maxLengthInDim[facing.dim] && length > 0)
+					{
 						//We've reached the max straight length for that dimension, pick a new one
 						pickNew = true;
-					} else {
+					}
+					else
+					{
 						var next = pos.Move(facing);
-						if(!IsEmptySpace(next)) {
+						if(!maze.IsEmptySpace(next))
+						{
 							//The path ahead is obstructed, we must pick a new direction
 							pickNew = true;
 						}
 					}
 				}
-				if(pickNew) {
+				if(pickNew)
+				{
 					//Randomize direction
 					facing = PickRandomValidDir(pos);
-					if(!facing.IsValid) {
+					if(!facing.IsValid)
+					{
 						//There is nowhere left to go
 						return false;
 					}
-				} else {
+				}
+				else
+				{
 					//Simplify maze - keep going straight
-					
 				}
 				pos = pos.Move(facing);
 				var piece = new MazePiece(dims);
 				piece.iterationNum = iteration;
 				maze.mazemap.Add(pos.ToString(), piece);
-				JoinPieces(pos, facing.Inverse); //Join the piece with the last one
-				if(iteration == 0 && pos.y == bounds.upper.y) {
-					maze.finishTile = pos;
-					var p = GetMazePiece(pos);
-					if(p != null) p.ConnectTo(Facing.north);
+				maze.JoinPieces(pos, facing.Inverse); //Join the piece with the last one
+				if(iteration == 0 && pos.y == bounds.upper.y)
+				{
+					maze.endPosition = pos;
 					return true;
 				}
 				length++;
@@ -103,33 +155,39 @@ namespace MazeGen {
 			return false;
 		}
 
-		private void FillEmptySpaces(int iteration) {
+		private void FillEmptySpaces(int iteration)
+		{
 			if(iteration >= maxEmptySpaceFillIterations) return;
 			iteration++;
 			List<(MazeVector pos, Facing from)> emptyNeighbors = new List<(MazeVector pos, Facing from)>();
-			foreach(var posStr in maze.mazemap.Keys) {
+			foreach(var posStr in maze.mazemap.Keys)
+			{
 				var pos = new MazeVector(posStr);
 				var facing = PickRandomValidDir(pos);
 				if(facing.IsValid) emptyNeighbors.Add((pos.Move(facing), facing.Inverse));
 			}
-			while(emptyNeighbors.Count > 0) {
+			while(emptyNeighbors.Count > 0)
+			{
 				var item = emptyNeighbors[0];
 				emptyNeighbors.RemoveAt(0);
 				//30% of all neighbor tiles deviate into a new path
-				if(GetMazePiece(item.pos) == null && Chance(0.3f)) {
+				if(maze.GetMazePiece(item.pos) == null && Chance(0.3f))
+				{
 					var p = new MazePiece(dims);
 					p.iterationNum = iteration;
 					maze.mazemap[item.pos.ToString()] = p;
-					JoinPieces(item.pos, item.from);
+					maze.JoinPieces(item.pos, item.from);
 					Drunkard(item.pos, PickRandomWallFacing(maze.GetPieceAt(item.pos), random), iteration, out var l);
 				}
 			}
 			FillEmptySpaces(iteration);
 		}
 
-		private Facing PickRandomWallFacing(MazePiece piece, Random random) {
+		private Facing PickRandomWallFacing(MazePiece piece, Random random)
+		{
 			List<Facing> picks = new List<Facing>();
-			for(int i = 0; i < dims*2; i++) {
+			for(int i = 0; i < dims * 2; i++)
+			{
 				var f = new Facing(i);
 				if(!piece.directions.Contains(f)) picks.Add(f);
 			}
@@ -137,59 +195,34 @@ namespace MazeGen {
 			return picks[random.Next(picks.Count)];
 		}
 
-		private void JoinPieces(MazeVector pos, Facing direction) {
-			MazePiece p1 = GetMazePiece(pos);
-			MazePiece p2 = GetMazePiece(pos.Move(direction));
-			p1.ConnectTo(direction);
-			if(p2 != null) p2.ConnectTo(direction.Inverse);
-		}
-
-		private Facing PickRandomValidDir(MazeVector pos, params int[] exclude) {
+		private Facing PickRandomValidDir(MazeVector pos, params int[] exclude)
+		{
 			var dirs = GetValidDirs(pos, exclude);
-			if(dirs.Length > 0) {
+			if(dirs.Length > 0)
+			{
 				return dirs[random.Next(dirs.Length)];
-			} else {
+			}
+			else
+			{
 				return Facing.invalid;
 			}
 		}
 
-		private Facing[] GetValidDirs(MazeVector pos, params int[] exclude) {
+		private Facing[] GetValidDirs(MazeVector pos, params int[] exclude)
+		{
 			var ex = new List<int>(exclude);
 			List<Facing> dirs = new List<Facing>();
-			for(byte i = 0; i < dims*2; i++) {
+			for(byte i = 0; i < dims * 2; i++)
+			{
 				if(ex.Contains(i)) continue;
 				var f = new Facing(i);
-				if(IsEmptySpace(pos.Move(f))) dirs.Add(f);
+				if(maze.IsEmptySpace(pos.Move(f))) dirs.Add(f);
 			}
 			return dirs.ToArray();
 		}
 
-		private bool IsInsideBounds(MazeVector vector) {
-			for(int i = 0; i < vector.Dims; i++) {
-				if(vector[i] < bounds.lower[i] || vector[i] > bounds.upper[i]) return false;
-			}
-			return true;
-		}
-
-		private MazePiece GetMazePiece(MazeVector pos) {
-			if(IsInsideBounds(pos)) {
-				MazePiece ret = null;
-				maze.mazemap.TryGetValue(pos.ToString(), out ret);
-				return ret;
-			} else {
-				return null;
-			}
-		}
-
-		private bool IsEmptySpace(MazeVector pos) {
-			if(!IsInsideBounds(pos)) {
-				return false;
-			} else {
-				return GetMazePiece(pos) == null;
-			}
-		}
-
-		private bool Chance(float chance) {
+		private bool Chance(float chance)
+		{
 			return random.NextDouble() <= chance;
 		}
 	}
