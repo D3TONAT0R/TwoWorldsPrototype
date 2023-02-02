@@ -52,23 +52,33 @@ public class MazeBuilder : MonoBehaviour
 		}
 	}
 
+	public MazePiecePrefabs mazePiecePrefabs;
 	public bool clear;
 	public bool regenerate;
-	public MazePiecePrefabs mazePiecePrefabs;
 
+	[Space(20)]
+	[Range(4, 16)]
+	public int width = 8;
+	[Range(4, 16)]
+	public int height = 8;
+	public float mazeScale = 5;
+
+	[Space(20)]
 	public bool randomSeed;
 	public int seed = 1234;
-	[Range(0,1)]
+
+	[Space(20)]
+	[Range(0, 1)]
 	public float complexity = 0.7f;
-	[Range(0,8)]
+	[Range(0, 8)]
 	public int fillIterations = 4;
+	[Range(0, 1)]
+	public float breakup = 0.1f;
+	public bool requireExit;
 
-	[Range(4,16)]
-	public int width = 8;
-	[Range(4,16)]
-	public int height = 8;
-
-	public float mazeScale = 5;
+	[Space(20)]
+	public bool openStart;
+	public bool openEnd;
 
 	void Start()
 	{
@@ -104,12 +114,20 @@ public class MazeBuilder : MonoBehaviour
 		{
 			seed = Random.Range(0, 10000);
 		}
-		MazeGenerator<Maze> gen = new MazeGenerator<Maze>(width, height);
-		gen.mazeComplexity = complexity;
-		gen.seed = seed;
-		gen.maxEmptySpaceFillIterations = fillIterations;
+		MazeGenerator gen = new MazeGenerator(width, height)
+		{
+			mazeComplexity = complexity,
+			seed = seed,
+			maxEmptySpaceFillIterations = fillIterations,
+			openStart = openStart,
+			openEnd = openEnd
+		};
 
-		var maze = gen.Generate(2, new Maze.MazeVectorBounds(new MazeVector(0, 0), new MazeVector(width - 1, height - 1)), out _);
+		var maze = gen.Generate(requireExit, out _);
+		if(breakup > 0)
+		{
+			gen.Breakup(breakup);
+		}
 
 		if(maze != null)
 		{
