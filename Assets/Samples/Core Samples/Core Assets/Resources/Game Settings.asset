@@ -1,0 +1,556 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fe93c0d76a3dbf458741caa7ec3af5c, type: 3}
+  m_Name: Game Settings
+  m_EditorClassIdentifier: 
+  isFallback: 0
+  settings:
+  - settingName: InventoryDefinitionSet
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: InputActionAsset
+    value: 0
+    objectValue: {fileID: -944628639613478452, guid: 4775c2181da318e4696bb4fe4a74d3c7,
+      type: 3}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: DefaultCameraFieldOfView
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 70
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: enableScreenshotKey
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 1
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: GuiSettings
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 1
+  - settingName: Defaults
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 2
+  - settingName: Localization
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 3
+  - settingName: DefaultLocalizationID
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: EN
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: AudioSettings
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 4
+  - settingName: Screen Fader
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 5
+  - settingName: Screen Fades
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 6
+  - settingName: SerializationSettings
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 7
+  - settingName: throwErrorOnNonexistingSettings
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: enableScreenshots
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 1
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: screenshotKey
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 283
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: enableSuperScreenshots
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 1
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: RedMesh
+    value: 0
+    objectValue: {fileID: -645592108707704995, guid: 7b0c3743aaf679f4fa8d0848dcdcf0c2,
+      type: 3}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: GreenMesh
+    value: 0
+    objectValue: {fileID: 6615962114011484286, guid: 7b0c3743aaf679f4fa8d0848dcdcf0c2,
+      type: 3}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: BlueMesh
+    value: 0
+    objectValue: {fileID: -2309404035205077305, guid: 7b0c3743aaf679f4fa8d0848dcdcf0c2,
+      type: 3}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: AlphaMesh
+    value: 0
+    objectValue: {fileID: 4944435276719414011, guid: 7b0c3743aaf679f4fa8d0848dcdcf0c2,
+      type: 3}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: ElementMeshCollection
+    value: 0
+    objectValue: {fileID: 11400000, guid: bb499bf3ce719924f848efa837c6b575, type: 2}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: DefaultElementDensity
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 75
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: InventoryItemDefinitions
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: FPSLimit
+    value: 0
+    objectValue: {fileID: 0}
+    booleanValue: 0
+    intValue: 144
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: CustomCursor
+    value: 0
+    objectValue: {fileID: 2800000, guid: ff0af8612c9928b4c8182a6135b7fb24, type: 3}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: , ns: , asm: }
+    00000001:
+      type: {class: GUIHandler/GUISettings, ns: D3T.Gui, asm: D3T.Core}
+      data:
+        styleCollections:
+        - {fileID: 11400000, guid: f8ced36bf2aac9f46bb0ab7a9598c852, type: 2}
+        - {fileID: 11400000, guid: 4adaf7b78b0a9584bb6c2d6acf6a062a, type: 2}
+        - {fileID: 11400000, guid: bbd8d6ff99536ef4597d24c6643ce69d, type: 2}
+        mouseEventLayerMask:
+          serializedVersion: 2
+          m_Bits: 1843
+    00000002:
+      type: {class: DefaultScreenFadeSettings, ns: D3T.Gui, asm: D3T.Core}
+      data:
+        fadeColor: {r: 0, g: 0, b: 0, a: 1}
+        fadeInDuration: 2
+        fadeOutDuration: 2
+    00000003:
+      type: {class: Localizer/LocalizationGameSettings, ns: D3T.L10N, asm: D3T.Core}
+      data:
+        enabled: 1
+        defaultLocalizationID: EN
+    00000004:
+      type: {class: AudioManager/AudioSettingData, ns: D3T.Audio, asm: D3T.Core}
+      data:
+        masterMixer: {fileID: 24100000, guid: c21505e86d36e6447bb44b5f334fd56c, type: 2}
+        musicClipLibrary: {fileID: 0}
+        defaultFXGroup: {fileID: 24351352, guid: c21505e86d36e6447bb44b5f334fd56c,
+          type: 2}
+        defaultMusicGroup: {fileID: 24328676, guid: c21505e86d36e6447bb44b5f334fd56c,
+          type: 2}
+        defaultInterfaceGroup: {fileID: 1888209901564475249, guid: c21505e86d36e6447bb44b5f334fd56c,
+          type: 2}
+        mainSnapshot: {fileID: 24500003, guid: c21505e86d36e6447bb44b5f334fd56c, type: 2}
+        muffledSnapshot: {fileID: 245319743130765658, guid: c21505e86d36e6447bb44b5f334fd56c,
+          type: 2}
+        submergedSnapshot: {fileID: 6232357613090658906, guid: c21505e86d36e6447bb44b5f334fd56c,
+          type: 2}
+    00000005:
+      type: {class: DefaultScreenFadeSettings, ns: D3T.Gui, asm: D3T.Core}
+      data:
+        fadeColor: {r: 0, g: 0, b: 0, a: 1}
+        fadeInDuration: 2
+        fadeOutDuration: 2
+    00000006:
+      type: {class: DefaultScreenFadeSettings, ns: D3T.Gui, asm: D3T.Core}
+      data:
+        fadeColor: {r: 0, g: 0, b: 0, a: 1}
+        fadeInDuration: 2
+        fadeOutDuration: 2
+    00000007:
+      type: {class: SaveManager/Settings, ns: D3T.Serialization, asm: D3T.Core}
+      data:
+        serializationMode: 0
+        separateFolderPerSave: 1
+        numberOfBackupsPerSave: 5
+        encryptKeys: 0
