@@ -7,6 +7,8 @@ namespace MazeGen {
 		public static readonly Facing south = new Facing(2);
 		public static readonly Facing east = new Facing(1);
 		public static readonly Facing west = new Facing(0);
+		public static readonly Facing down = new Facing(4);
+		public static readonly Facing up = new Facing(5);
 		public static readonly Facing invalid = new Facing(255);
 
 		public byte value;
@@ -27,20 +29,26 @@ namespace MazeGen {
 
 		public Facing TurnLeft {
 			get {
-				if(value == 0) return new Facing(2);
-				if(value == 1) return new Facing(3);
-				if(value == 2) return new Facing(1);
-				if(value == 3) return new Facing(0);
-				return this;
+				switch(value)
+				{
+					case 0: return new Facing(2);
+					case 1: return new Facing(3);
+					case 2: return new Facing(1);
+					case 3: return new Facing(0);
+					default: return this;
+				}
 			}
 		}
 		public Facing TurnRight {
 			get {
-				if(value == 0) return new Facing(3);
-				if(value == 1) return new Facing(2);
-				if(value == 2) return new Facing(0);
-				if(value == 3) return new Facing(1);
-				return this;
+				switch(value)
+				{
+					case 0: return new Facing(3);
+					case 1: return new Facing(2);
+					case 2: return new Facing(0);
+					case 3: return new Facing(1);
+					default: return this;
+				}
 			}
 		}
 		public Facing Inverse {
@@ -50,6 +58,31 @@ namespace MazeGen {
 				} else {
 					return new Facing(value - 1);
 				}
+			}
+		}
+
+		public int HorizontalAngle
+		{
+			get
+			{
+				switch(value)
+				{
+					case 0: return 270;
+					case 1: return 90;
+					case 2: return 180;
+					case 3:	return 0;
+					default: return 0;
+				}
+			}
+		}
+
+		public int VerticalAngle
+		{
+			get
+			{
+				if(value == 4) return 90;
+				else if(value == 5) return -90;
+				else return 0;
 			}
 		}
 

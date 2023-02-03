@@ -11,18 +11,12 @@ namespace MazeGen {
 		public SortedSet<Facing> directions = new SortedSet<Facing>();
 		public int iterationNum;
 
-		public bool north {
-			get { return directions.Contains(Facing.north); }
-		}
-		public bool east {
-			get { return directions.Contains(Facing.east); }
-		}
-		public bool south {
-			get { return directions.Contains(Facing.south); }
-		}
-		public bool west {
-			get { return directions.Contains(Facing.west); }
-		}
+		public bool North => directions.Contains(Facing.north);
+		public bool East => directions.Contains(Facing.east);
+		public bool South => directions.Contains(Facing.south);
+		public bool West => directions.Contains(Facing.west);
+		public bool Down => directions.Contains(Facing.down);
+		public bool Up => directions.Contains(Facing.up);
 
 		public string Binary {
 			get {
@@ -37,6 +31,19 @@ namespace MazeGen {
 		public bool HasSide {
 			get {
 				return directions.Count > 0;
+			}
+		}
+
+		public int ConnectionCount
+		{
+			get
+			{
+				int c = 0;
+				for(byte i = 0; i < dims*2; i++)
+				{
+					if(this[i]) c++;
+				}
+				return c;
 			}
 		}
 

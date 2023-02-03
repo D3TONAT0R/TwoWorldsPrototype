@@ -3,11 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using MazeGen;
 using D3T;
+using System.Linq;
 
 namespace TwoWorlds
 {
+	[SelectionBase]
 	public class MazeBuilder : MonoBehaviour
 	{
+		[System.Serializable]
+		public class DecorationPrefab : WeightedGameObject
+		{
+			public enum PlacementRule { None, FaceWall, FaceOpening }
+
+			public PlacementRule placementRule;
+		}
+
 		[System.Serializable]
 		public class MazePiecePrefabs
 		{
@@ -55,9 +65,11 @@ namespace TwoWorlds
 		}
 
 		public MazePiecePrefabs mazePiecePrefabs;
-		[Range(0, 0.5f)]
+		[Range(0, 1f)]
 		public float decorationAmount = 0.1f;
-		public WeightedGameObject[] decorations;
+		public DecorationPrefab[] decorations;
+		public GameObject startBedPrefab;
+		public GameObject destinationBedPrefab;
 
 		public bool autoRegenerate;
 
@@ -77,7 +89,7 @@ namespace TwoWorlds
 		public float complexity = 0.7f;
 		[Range(0, 8)]
 		public int fillIterations = 4;
-		[Range(0, 1)]
+		[Range(0, 3)]
 		public float breakup = 0.1f;
 		public bool requireExit;
 
@@ -85,10 +97,14 @@ namespace TwoWorlds
 		public bool openStart;
 		public bool openEnd;
 
-		void Start()
+
+		private GameObject startBedInstance;
+		private GameObject destinationBedInstance;
+
+		private void Awake()
 		{
+			Clear();
 			Generate();
-			Decorate();
 		}
 
 		private void OnValidate()
@@ -99,6 +115,7 @@ namespace TwoWorlds
 			}
 		}
 
+		[ContextMenu("Clear")]
 		public void Clear()
 		{
 			for(int i = transform.childCount - 1; i >= 0; i--)
@@ -110,11 +127,18 @@ namespace TwoWorlds
 		[ContextMenu("Generate Maze")]
 		public void Generate()
 		{
-			BuildMaze();
-			Decorate();
+			if(GameLevelLoader.nextMazeSettings != null)
+			{
+				width = GameLevelLoader.nextMazeSettings.width;
+				height = GameLevelLoader.nextMazeSettings.height;
+				complexity = GameLevelLoader.nextMazeSettings.complexity;
+			}
+			var maze = BuildMaze();
+			Decorate(maze);
+			PlaceBeds(maze);
 		}
 
-		private void BuildMaze()
+		private Maze BuildMaze()
 		{
 			Clear();
 			if(randomSeed)
@@ -147,10 +171,10 @@ namespace TwoWorlds
 						GameObject prefab;
 						if(piece != null)
 						{
-							if(piece.north) pieceIndex += 1 << 3;
-							if(piece.east) pieceIndex += 1 << 2;
-							if(piece.south) pieceIndex += 1 << 1;
-							if(piece.west) pieceIndex += 1 << 0;
+							if(piece.North) pieceIndex += 1 << 3;
+							if(piece.East) pieceIndex += 1 << 2;
+							if(piece.South) pieceIndex += 1 << 1;
+							if(piece.West) pieceIndex += 1 << 0;
 							prefab = mazePiecePrefabs.GetPiece(pieceIndex);
 						}
 						else
@@ -164,30 +188,92 @@ namespace TwoWorlds
 						}
 					}
 				}
+				return maze;
 			}
 			else
 			{
 				Debug.LogError("Maze gen failed");
+				return null;
 			}
 		}
 
-		private void Decorate()
+		private void Decorate(Maze m)
 		{
+			Random.InitState(seed + 1);
 			for(int z = 0; z < height; z++)
 			{
 				for(int x = 0; x < width; x++)
 				{
+					var p = m.GetPieceAt(new MazeVector(x, z));
 					if(RandomUtilities.Probability(decorationAmount))
 					{
 						var prefab = WeightedGameObject.PickRandomFromArray(decorations);
-						if(prefab)
+						if(prefab.gameObject)
 						{
-							var instance = Instantiate(prefab, transform);
+							var instance = Instantiate(prefab.gameObject, transform);
 							instance.transform.localPosition = new Vector3(x * mazeScale, 0, z * mazeScale);
+							if(prefab.placementRule != DecorationPrefab.PlacementRule.None)
+							{
+								bool c = prefab.placementRule == DecorationPrefab.PlacementRule.FaceOpening;
+
+								List<Facing> facings = new List<Facing>();
+								if(p.North == c) facings.Add(Facing.north);
+								if(p.East == c) facings.Add(Facing.east);
+								if(p.South == c) facings.Add(Facing.south);
+								if(p.West == c) facings.Add(Facing.west);
+
+								if(facings.Count > 0)
+								{
+									instance.transform.localEulerAngles = new Vector3(0, RandomUtilities.PickRandom(facings).HorizontalAngle, 0);
+								}
+							}
 						}
 					}
 				}
 			}
+		}
+
+		private void PlaceBeds(Maze m)
+		{
+			Random.InitState(seed + 2);
+			PlaceWallFacingObjectAt(m, PickValidBedSpawn(m), startBedPrefab);
+			PlaceWallFacingObjectAt(m, PickValidBedSpawn(m), destinationBedPrefab);
+		}
+
+		private void PlaceWallFacingObjectAt(Maze m, MazeVector v, GameObject prefab)
+		{
+			var piece = m.GetPieceAt(v);
+			Facing dir = new Facing(255);
+			for(int i = 0; i < 4; i++)
+			{
+				var f = new Facing(i);
+				if(!piece.directions.Contains(f))
+				{
+					dir = f;
+					break;
+				}
+			}
+			var inst = Instantiate(prefab, transform);
+			inst.transform.localPosition = new Vector3(v[0] * mazeScale, 0, v[1] * mazeScale);
+			inst.transform.localEulerAngles = new Vector3(0, dir.HorizontalAngle, 0);
+		}
+
+		private MazeVector PickValidBedSpawn(Maze m, params MazeVector[] exclude)
+		{
+			for(int attempts = 20; attempts >= 0; attempts--)
+			{
+				var pos = RandomPoint();
+				if(exclude.Contains(pos)) continue;
+				var piece = m.GetPieceAt(pos);
+				var cc = piece.ConnectionCount;
+				if(cc > 0 && cc < 4) return pos;
+			}
+			return new MazeVector();
+		}
+
+		private MazeVector RandomPoint()
+		{
+			return new MazeVector(Random.Range(0, width), Random.Range(0, height));
 		}
 	} 
 }

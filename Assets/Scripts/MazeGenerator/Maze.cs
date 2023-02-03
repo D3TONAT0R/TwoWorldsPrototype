@@ -59,16 +59,7 @@ namespace MazeGen {
 			return true;
 		}
 
-		public MazePiece GetPieceAt(MazeVector vector) {
-			if(!IsInsideBounds(vector)) return null;
-			if(!mazemap.ContainsKey(vector.ToString())) {
-				return null;
-			} else {
-				return mazemap[vector.ToString()];
-			}
-		}
-
-		public MazePiece GetMazePiece(MazeVector pos)
+		public MazePiece GetPieceAt(MazeVector pos)
 		{
 			if(IsInsideBounds(pos) && mazemap.TryGetValue(pos.ToString(), out var piece))
 			{
@@ -88,14 +79,14 @@ namespace MazeGen {
 			}
 			else
 			{
-				return GetMazePiece(pos) == null;
+				return GetPieceAt(pos) == null;
 			}
 		}
 
 		public void JoinPieces(MazeVector pos, Facing direction)
 		{
-			MazePiece p1 = GetMazePiece(pos);
-			MazePiece p2 = GetMazePiece(pos.Move(direction));
+			MazePiece p1 = GetPieceAt(pos);
+			MazePiece p2 = GetPieceAt(pos.Move(direction));
 			if(p1 != null) p1.ConnectTo(direction);
 			if(p2 != null) p2.ConnectTo(direction.Inverse);
 		}

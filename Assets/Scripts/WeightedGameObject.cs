@@ -6,19 +6,19 @@ using UnityEngine;
 namespace TwoWorlds
 {
 	[System.Serializable]
-	public struct WeightedGameObject
+	public class WeightedGameObject
 	{
 		public float weight;
 		public GameObject gameObject;
 
-		public static GameObject PickRandomFromArray(WeightedGameObject[] array)
+		public static T PickRandomFromArray<T>(T[] array) where T : WeightedGameObject
 		{
 			float[] weights = new float[array.Length];
 			for(int i = 0; i < array.Length; i++)
 			{
 				weights[i] = array[i].weight;
 			}
-			return array[RandomUtilities.PickRandomWeighted(weights)].gameObject;
+			return array[RandomUtilities.PickRandomWeighted(weights)];
 		}
 	} 
 }

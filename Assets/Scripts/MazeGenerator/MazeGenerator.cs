@@ -171,7 +171,7 @@ namespace MazeGen
 				var item = emptyNeighbors[0];
 				emptyNeighbors.RemoveAt(0);
 				//30% of all neighbor tiles deviate into a new path
-				if(maze.GetMazePiece(item.pos) == null && Chance(0.3f))
+				if(maze.GetPieceAt(item.pos) == null && Chance(0.3f))
 				{
 					var p = new MazePiece(dims);
 					p.iterationNum = iteration;
