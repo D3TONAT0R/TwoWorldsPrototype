@@ -4,18 +4,18 @@ using System.Collections.Generic;
 namespace MazeGen {
 	public class Maze {
 
-		public struct MazeVectorBounds {
+		public struct MazeBounds {
 			public MazeVector lower;
 			public MazeVector upper;
 
-			public MazeVectorBounds(MazeVector l, MazeVector u) {
+			public MazeBounds(MazeVector l, MazeVector u) {
 				lower = l;
 				upper = u;
 			}
 		}
 
 		public readonly int dimensions;
-		public MazeVectorBounds mazeBounds;
+		public MazeBounds mazeBounds;
 
 		public Dictionary<string, MazePiece> mazemap;
 
@@ -35,7 +35,7 @@ namespace MazeGen {
 			}
 		}
 
-		public Maze(int dims, MazeVectorBounds bounds) {
+		public Maze(int dims, MazeBounds bounds) {
 			if(dims < 2) {
 				throw new ArgumentException("A maze must be at least 2-dimensional.");
 			}

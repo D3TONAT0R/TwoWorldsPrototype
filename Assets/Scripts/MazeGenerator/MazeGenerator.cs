@@ -11,7 +11,7 @@ namespace MazeGen
 		public int seed;
 
 		public int dims;
-		public MazeVectorBounds bounds;
+		public MazeBounds bounds;
 
 		public MazeVector startPos;
 
@@ -35,7 +35,7 @@ namespace MazeGen
 			{
 				u[i] = size[i] - 1;
 			}
-			bounds = new MazeVectorBounds(new MazeVector(l), new MazeVector(u));
+			bounds = new MazeBounds(new MazeVector(l), new MazeVector(u));
 			maxLengthInDim = new MazeVector(new int[dims]);
 		}
 
