@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Maze Bed
+  m_Name: Maze Bed 2
   m_Shader: {fileID: 4800000, guid: a994b1c37ea7cc849bfabf8907ca7bce, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -70,10 +70,10 @@ Material:
     - _DstBlend: 0
     - _Exclusion: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0
+    - _Glossiness: 0.545
     - _GlossyReflections: 1
     - _Integrity: 1
-    - _Metallic: 0
+    - _Metallic: 0.456
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -84,5 +84,5 @@ Material:
     - _WorldSpaceDisintegration: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.9019608, g: 0.18580389, b: 0.18580389, a: 1}
+    - _Color: {r: 0.61, g: 0.61, b: 0.61, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
