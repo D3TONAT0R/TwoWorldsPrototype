@@ -79,6 +79,13 @@ namespace MazeGen {
 		}
 
 		public override int GetHashCode() {
+			int hash = 0;
+			for(int i = 0; i < Dims; i++)
+			{
+				hash += vector[i] << (4 * i);
+			}
+			return hash;
+			/*
 			var hdim = 0;
 			for(int i = 0; i < vector.Count; i++) {
 				if(vector[i] != 0) hdim = i;
@@ -88,6 +95,7 @@ namespace MazeGen {
 				hc = unchecked(hc * 31 + vector[i]);
 			}
 			return hc;
+			*/
 		}
 
 		public override string ToString() {
@@ -109,7 +117,19 @@ namespace MazeGen {
 
 		public static bool operator!= (MazeVector l, MazeVector r)
 		{
-			return l.ToString() == r.ToString();
+			return l.ToString() != r.ToString();
+		}
+
+		public override bool Equals(object obj)
+		{
+			if(obj is MazeVector other)
+			{
+				return this == other;
+			}
+			else
+			{
+				return false;
+			}
 		}
 	} 
 }

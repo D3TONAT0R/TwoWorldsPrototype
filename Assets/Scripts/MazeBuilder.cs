@@ -138,7 +138,6 @@ namespace TwoWorlds
 			var maze = BuildMaze();
 			Decorate(maze);
 			PlaceBeds(maze);
-			shortestPath = MazeNavigator.CalculatePath(maze, startPos, destinationPos);
 			if(shortestPath == null)
 			{
 				Debug.LogError("No path was found from start to destination.");
@@ -211,7 +210,11 @@ namespace TwoWorlds
 			{
 				for(int x = 0; x < width; x++)
 				{
-					var p = m.GetPieceAt(new MazeVector(x, z));
+					var piece = m.GetPieceAt(new MazeVector(x, z));
+					if(piece == null)
+					{
+						continue;
+					}
 					if(RandomUtilities.Probability(decorationAmount))
 					{
 						var prefab = WeightedGameObject.PickRandomFromArray(decorations);
@@ -224,10 +227,10 @@ namespace TwoWorlds
 								bool c = prefab.placementRule == DecorationPrefab.PlacementRule.FaceOpening;
 
 								List<Direction> facings = new List<Direction>();
-								if(p.North == c) facings.Add(Direction.north);
-								if(p.East == c) facings.Add(Direction.east);
-								if(p.South == c) facings.Add(Direction.south);
-								if(p.West == c) facings.Add(Direction.west);
+								if(piece.North == c) facings.Add(Direction.north);
+								if(piece.East == c) facings.Add(Direction.east);
+								if(piece.South == c) facings.Add(Direction.south);
+								if(piece.West == c) facings.Add(Direction.west);
 
 								if(facings.Count > 0)
 								{
@@ -242,11 +245,28 @@ namespace TwoWorlds
 
 		private void PlaceBeds(Maze m)
 		{
-			Random.InitState(seed + 2);
-			startPos = PickValidBedSpawn(m);
-			destinationPos = PickValidBedSpawn(m);
+			shortestPath = GenerateBedPositions(m);
 			PlaceWallFacingObjectAt(m, startPos, startBedPrefab);
 			PlaceWallFacingObjectAt(m, destinationPos, destinationBedPrefab);
+		}
+
+		private MazePath GenerateBedPositions(Maze m)
+		{
+			Random.InitState(seed + 2);
+			int minLength = (int)Mathf.Sqrt(m.TotalPieceCount);
+			int maxLength = 3 * minLength;
+			for(int attempt = 0; attempt < 100; attempt++)
+			{
+				startPos = PickValidBedSpawn(m);
+				destinationPos = PickValidBedSpawn(m);
+				var path = MazeNavigator.CalculatePath(m, startPos, destinationPos);
+				if(path != null && path.PathLength >= minLength && path.PathLength <= maxLength)
+				{
+					//Path is long enough
+					return path;
+				}
+			}
+			throw new System.InvalidOperationException("Failed to generate path.");
 		}
 
 		private void PlaceWallFacingObjectAt(Maze m, MazeVector v, GameObject prefab)

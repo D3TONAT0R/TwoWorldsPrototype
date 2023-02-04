@@ -11,6 +11,8 @@ namespace MazeGen
 
 		public List<Direction> directions = new List<Direction>();
 
+		public int PathLength => directions.Count;
+
 		public MazePath(MazeVector start)
 		{
 			StartPos = start;
@@ -58,6 +60,7 @@ namespace MazeGen
 				var nextPos = EndPos.Move(direction);
 				if(!visited.Contains(nextPos))
 				{
+					visited.Add(nextPos);
 					nextIteration.Add(Expand(direction));
 					hasNext = true;
 				}
