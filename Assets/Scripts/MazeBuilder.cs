@@ -13,7 +13,7 @@ namespace TwoWorlds
 		[System.Serializable]
 		public class DecorationPrefab : WeightedGameObject
 		{
-			public enum PlacementRule { None, FaceWall, FaceOpening }
+			public enum PlacementRule { None, FaceOpening, FaceWall, ReplaceWall }
 
 			public PlacementRule placementRule;
 		}
@@ -97,10 +97,12 @@ namespace TwoWorlds
 		public bool openStart;
 		public bool openEnd;
 
+		private Maze maze;
+		private Dictionary<MazeVector, Transform> mazeGeometry;
 		private MazeVector startPos;
-		private GameObject startBedInstance;
+		private Transform startBedInstance;
 		private MazeVector destinationPos;
-		private GameObject destinationBedInstance;
+		private Transform destinationBedInstance;
 		private MazePath shortestPath;
 
 		private void Awake()
@@ -135,9 +137,9 @@ namespace TwoWorlds
 				height = GameLevelLoader.nextMazeSettings.height;
 				complexity = GameLevelLoader.nextMazeSettings.complexity;
 			}
-			var maze = BuildMaze();
-			Decorate(maze);
-			PlaceBeds(maze);
+			maze = BuildMaze();
+			Decorate();
+			PlaceBeds();
 			if(shortestPath == null)
 			{
 				Debug.LogError("No path was found from start to destination.");
@@ -147,6 +149,7 @@ namespace TwoWorlds
 		private Maze BuildMaze()
 		{
 			Clear();
+			mazeGeometry = new Dictionary<MazeVector, Transform>();
 			if(randomSeed)
 			{
 				seed = Random.Range(0, 10000);
@@ -172,7 +175,8 @@ namespace TwoWorlds
 				{
 					for(int z = 0; z < height; z++)
 					{
-						var piece = maze.GetPieceAt(new MazeVector(x, z));
+						var pos = new MazeVector(x, z);
+						var piece = maze.GetPieceAt(pos);
 						int pieceIndex = 0;
 						GameObject prefab;
 						if(piece != null)
@@ -191,6 +195,7 @@ namespace TwoWorlds
 						{
 							var instance = Instantiate(prefab, transform);
 							instance.transform.localPosition = new Vector3(x * mazeScale, 0, z * mazeScale);
+							mazeGeometry.Add(pos, instance.transform);
 						}
 					}
 				}
@@ -203,14 +208,15 @@ namespace TwoWorlds
 			}
 		}
 
-		private void Decorate(Maze m)
+		private void Decorate()
 		{
 			Random.InitState(seed + 1);
 			for(int z = 0; z < height; z++)
 			{
 				for(int x = 0; x < width; x++)
 				{
-					var piece = m.GetPieceAt(new MazeVector(x, z));
+					var pos = new MazeVector(x, z);
+					var piece = maze.GetPieceAt(pos);
 					if(piece == null)
 					{
 						continue;
@@ -218,6 +224,12 @@ namespace TwoWorlds
 					if(RandomUtilities.Probability(decorationAmount))
 					{
 						var prefab = WeightedGameObject.PickRandomFromArray(decorations);
+						bool needsWall = prefab.placementRule == DecorationPrefab.PlacementRule.FaceWall || prefab.placementRule == DecorationPrefab.PlacementRule.ReplaceWall;
+						bool hasWall = !piece.North || !piece.East || !piece.South || !piece.West;
+						if(needsWall && !hasWall)
+						{
+							continue;
+						}
 						if(prefab.gameObject)
 						{
 							var instance = Instantiate(prefab.gameObject, transform);
@@ -226,15 +238,30 @@ namespace TwoWorlds
 							{
 								bool c = prefab.placementRule == DecorationPrefab.PlacementRule.FaceOpening;
 
-								List<Direction> facings = new List<Direction>();
-								if(piece.North == c) facings.Add(Direction.north);
-								if(piece.East == c) facings.Add(Direction.east);
-								if(piece.South == c) facings.Add(Direction.south);
-								if(piece.West == c) facings.Add(Direction.west);
+								List<Direction> directions = new List<Direction>();
+								if(piece.North == c) directions.Add(Direction.north);
+								if(piece.East == c) directions.Add(Direction.east);
+								if(piece.South == c) directions.Add(Direction.south);
+								if(piece.West == c) directions.Add(Direction.west);
 
-								if(facings.Count > 0)
+								if(directions.Count > 0)
 								{
-									instance.transform.localEulerAngles = new Vector3(0, RandomUtilities.PickRandom(facings).HorizontalAngle, 0);
+									var dir = RandomUtilities.PickRandom(directions);
+									instance.transform.localEulerAngles = new Vector3(0, dir.HorizontalAngle, 0);
+									if(prefab.placementRule == DecorationPrefab.PlacementRule.ReplaceWall && mazeGeometry.TryGetValue(pos, out var geometry))
+									{
+										string wallName;
+										if(dir == Direction.north) wallName = "N";
+										else if(dir == Direction.east) wallName = "E";
+										else if(dir == Direction.south) wallName = "S";
+										else wallName = "W";
+
+										var wall = geometry.Find(wallName);
+										if(wall)
+										{
+											wall.gameObject.SetActive(false);
+										}
+									}
 								}
 							}
 						}
@@ -243,23 +270,23 @@ namespace TwoWorlds
 			}
 		}
 
-		private void PlaceBeds(Maze m)
+		private void PlaceBeds()
 		{
-			shortestPath = GenerateBedPositions(m);
-			PlaceWallFacingObjectAt(m, startPos, startBedPrefab);
-			PlaceWallFacingObjectAt(m, destinationPos, destinationBedPrefab);
+			shortestPath = GenerateBedPositions();
+			startBedInstance = PlaceWallFacingObjectAt(startPos, startBedPrefab);
+			destinationBedInstance = PlaceWallFacingObjectAt(destinationPos, destinationBedPrefab);
 		}
 
-		private MazePath GenerateBedPositions(Maze m)
+		private MazePath GenerateBedPositions()
 		{
 			Random.InitState(seed + 2);
-			int minLength = (int)Mathf.Sqrt(m.TotalPieceCount);
+			int minLength = (int)Mathf.Sqrt(maze.TotalPieceCount);
 			int maxLength = 3 * minLength;
 			for(int attempt = 0; attempt < 100; attempt++)
 			{
-				startPos = PickValidBedSpawn(m);
-				destinationPos = PickValidBedSpawn(m);
-				var path = MazeNavigator.CalculatePath(m, startPos, destinationPos);
+				startPos = PickValidBedSpawn(maze);
+				destinationPos = PickValidBedSpawn(maze);
+				var path = MazeNavigator.CalculatePath(maze, startPos, destinationPos);
 				if(path != null && path.PathLength >= minLength && path.PathLength <= maxLength)
 				{
 					//Path is long enough
@@ -269,9 +296,9 @@ namespace TwoWorlds
 			throw new System.InvalidOperationException("Failed to generate path.");
 		}
 
-		private void PlaceWallFacingObjectAt(Maze m, MazeVector v, GameObject prefab)
+		private Transform PlaceWallFacingObjectAt(MazeVector v, GameObject prefab)
 		{
-			var piece = m.GetPieceAt(v);
+			var piece = maze.GetPieceAt(v);
 			Direction dir = new Direction(255);
 			for(int i = 0; i < 4; i++)
 			{
@@ -285,6 +312,7 @@ namespace TwoWorlds
 			var inst = Instantiate(prefab, transform);
 			inst.transform.localPosition = new Vector3(v[0] * mazeScale, 0, v[1] * mazeScale);
 			inst.transform.localEulerAngles = new Vector3(0, dir.HorizontalAngle, 0);
+			return inst.transform;
 		}
 
 		private MazeVector PickValidBedSpawn(Maze m, params MazeVector[] exclude)
