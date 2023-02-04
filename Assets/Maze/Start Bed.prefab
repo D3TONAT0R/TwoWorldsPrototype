@@ -582,7 +582,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   play: 1
-  duration: 1.5
+  waitForPlayerControl: 1
+  duration: 3
   destroyOnEnd: 1
   progress: 0
 --- !u!1 &9067312472722847481

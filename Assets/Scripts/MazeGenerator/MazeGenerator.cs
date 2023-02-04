@@ -86,11 +86,11 @@ namespace MazeGen
 					bool b = Chance(0.5f);
 					if(b)
 					{
-						maze.JoinPieces(new MazeVector(pos), Direction.north);
+						maze.JoinPieces(new MazeVector(pos), Direction.north, true);
 					}
 					else
 					{
-						maze.JoinPieces(new MazeVector(pos), Direction.east);
+						maze.JoinPieces(new MazeVector(pos), Direction.east, true);
 					}
 				}
 			}

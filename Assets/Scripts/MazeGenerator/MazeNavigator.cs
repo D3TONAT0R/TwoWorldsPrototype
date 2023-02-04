@@ -49,6 +49,7 @@ namespace MazeGen
 		{
 			bool hasNext = false;
 			var piece = m.GetPieceAt(EndPos);
+			if(piece == null) return false;
 			foreach(var direction in piece.directions)
 			{
 				if(directions.Count > 0 && direction == directions[directions.Count-1].Inverse)

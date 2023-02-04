@@ -1,4 +1,5 @@
-﻿using D3T.Triggers;
+﻿using D3T;
+using D3T.Triggers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace TwoWorlds
 	public class DisintegrationAnimation : MonoBehaviour, ISignalLink
 	{
 		public bool play;
+		public bool waitForPlayerControl = true;
 		public float duration;
 		public bool destroyOnEnd;
 
@@ -40,7 +42,9 @@ namespace TwoWorlds
 		// Update is called once per frame
 		void Update()
 		{
-			if(play)
+			bool shouldPlay = play;
+			if(waitForPlayerControl) shouldPlay &= Player.instance.canControl;
+			if(shouldPlay)
 			{
 				progress += Time.deltaTime / duration;
 			}

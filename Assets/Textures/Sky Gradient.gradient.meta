@@ -1,0 +1,74 @@
+fileFormatVersion: 2
+guid: d7280e606b8d2324a93dd0384cfc61b7
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: bc691e392508ec946bdcda213277f291, type: 3}
+  resolution: {x: 64, y: 64}
+  inputType: 0
+  gradient:
+    serializedVersion: 2
+    key0: {r: 0.36900002, g: 0.36900002, b: 0.36900002, a: 1}
+    key1: {r: 0.525, g: 0.525, b: 0.525, a: 1}
+    key2: {r: 0.603, g: 0.603, b: 0.603, a: 0}
+    key3: {r: 0.9339623, g: 0.9339623, b: 0.9339623, a: 0}
+    key4: {r: 0.9339623, g: 0.9339623, b: 0.9339623, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 12143
+    ctime1: 32382
+    ctime2: 32960
+    ctime3: 51272
+    ctime4: 65535
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    mode: 0
+    numColorKeys: 4
+    numAlphaKeys: 2
+  curve:
+    serializedVersion: 2
+    curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    preInfinity: 2
+    postInfinity: 2
+    rotationOrder: 4
+  lowColor: {r: 0, g: 0, b: 0, a: 1}
+  highColor: {r: 1, g: 1, b: 1, a: 1}
+  mode: 2
+  expandToCorners: 0
+  reversed: 0
+  linear: 0
+  generateMipMaps: 0
+  wrapMode: 1
+  filterMode: 1

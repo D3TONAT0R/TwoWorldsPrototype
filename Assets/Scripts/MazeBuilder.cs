@@ -64,38 +64,42 @@ namespace TwoWorlds
 			}
 		}
 
+		[Header("Prefabs")]
 		public MazePiecePrefabs mazePiecePrefabs;
-		[Range(0, 1f)]
-		public float decorationAmount = 0.1f;
-		public DecorationPrefab[] decorations;
 		public GameObject startBedPrefab;
 		public GameObject destinationBedPrefab;
 
+		[Header("Settings")]
+		public bool randomSeed;
+		public int seed = 1234;
 		public bool autoRegenerate;
 
 		[Space(20)]
+		public float mazeScale = 5;
 		[Range(4, 16)]
 		public int width = 8;
 		[Range(4, 16)]
 		public int height = 8;
-		public float mazeScale = 5;
-
-		[Space(20)]
-		public bool randomSeed;
-		public int seed = 1234;
-
-		[Space(20)]
 		[Range(0, 1)]
 		public float complexity = 0.7f;
 		[Range(0, 8)]
 		public int fillIterations = 4;
 		[Range(0, 3)]
 		public float breakup = 0.1f;
-		public bool requireExit;
 
-		[Space(20)]
-		public bool openStart;
-		public bool openEnd;
+		[Header("Decorations")]
+		public bool applyDecorations = true;
+		[Range(0, 1f)]
+		public float decorationAmount = 0.1f;
+		public DecorationPrefab[] decorations;
+		[Range(0, 1f)]
+		public float illuminationAmount = 0.1f;
+		public DecorationPrefab[] illumination;
+
+		[Header("Hints")]
+		[Range(0, 1)]
+		public float hintLevel = 0;
+		public GameObject hintArrowPrefab;
 
 		private Maze maze;
 		private Dictionary<MazeVector, Transform> mazeGeometry;
@@ -137,9 +141,15 @@ namespace TwoWorlds
 				height = GameLevelLoader.nextMazeSettings.height;
 				complexity = GameLevelLoader.nextMazeSettings.complexity;
 			}
+			shortestPath = null;
 			maze = BuildMaze();
-			Decorate();
+			if(applyDecorations)
+			{
+				Decorate(1, decorations, decorationAmount);
+				Decorate(2, illumination, illuminationAmount);
+			}
 			PlaceBeds();
+			PlaceHints();
 			if(shortestPath == null)
 			{
 				Debug.LogError("No path was found from start to destination.");
@@ -159,11 +169,11 @@ namespace TwoWorlds
 				mazeComplexity = complexity,
 				seed = seed,
 				maxEmptySpaceFillIterations = fillIterations,
-				openStart = openStart,
-				openEnd = openEnd
+				openStart = false,
+				openEnd = false
 			};
 
-			var maze = gen.Generate(requireExit, out _);
+			var maze = gen.Generate(false, out _);
 			if(breakup > 0)
 			{
 				gen.Breakup(breakup);
@@ -208,22 +218,22 @@ namespace TwoWorlds
 			}
 		}
 
-		private void Decorate()
+		private void Decorate(int seedOffset, DecorationPrefab[] prefabs, float probability)
 		{
-			Random.InitState(seed + 1);
 			for(int z = 0; z < height; z++)
 			{
 				for(int x = 0; x < width; x++)
 				{
+					Random.InitState(seed + seedOffset + z * 100 + x);
 					var pos = new MazeVector(x, z);
 					var piece = maze.GetPieceAt(pos);
 					if(piece == null)
 					{
 						continue;
 					}
-					if(RandomUtilities.Probability(decorationAmount))
+					if(RandomUtilities.Probability(probability))
 					{
-						var prefab = WeightedGameObject.PickRandomFromArray(decorations);
+						var prefab = WeightedGameObject.PickRandomFromArray(prefabs);
 						bool needsWall = prefab.placementRule == DecorationPrefab.PlacementRule.FaceWall || prefab.placementRule == DecorationPrefab.PlacementRule.ReplaceWall;
 						bool hasWall = !piece.North || !piece.East || !piece.South || !piece.West;
 						if(needsWall && !hasWall)
@@ -272,6 +282,7 @@ namespace TwoWorlds
 
 		private void PlaceBeds()
 		{
+			Random.InitState(seed + 10);
 			shortestPath = GenerateBedPositions();
 			startBedInstance = PlaceWallFacingObjectAt(startPos, startBedPrefab);
 			destinationBedInstance = PlaceWallFacingObjectAt(destinationPos, destinationBedPrefab);
@@ -279,7 +290,6 @@ namespace TwoWorlds
 
 		private MazePath GenerateBedPositions()
 		{
-			Random.InitState(seed + 2);
 			int minLength = (int)Mathf.Sqrt(maze.TotalPieceCount);
 			int maxLength = 3 * minLength;
 			for(int attempt = 0; attempt < 100; attempt++)
@@ -296,9 +306,9 @@ namespace TwoWorlds
 			throw new System.InvalidOperationException("Failed to generate path.");
 		}
 
-		private Transform PlaceWallFacingObjectAt(MazeVector v, GameObject prefab)
+		private Transform PlaceWallFacingObjectAt(MazeVector pos, GameObject prefab)
 		{
-			var piece = maze.GetPieceAt(v);
+			var piece = maze.GetPieceAt(pos);
 			Direction dir = new Direction(255);
 			for(int i = 0; i < 4; i++)
 			{
@@ -310,22 +320,41 @@ namespace TwoWorlds
 				}
 			}
 			var inst = Instantiate(prefab, transform);
-			inst.transform.localPosition = new Vector3(v[0] * mazeScale, 0, v[1] * mazeScale);
+			inst.transform.localPosition = new Vector3(pos[0] * mazeScale, 0, pos[1] * mazeScale);
 			inst.transform.localEulerAngles = new Vector3(0, dir.HorizontalAngle, 0);
 			return inst.transform;
 		}
 
 		private MazeVector PickValidBedSpawn(Maze m, params MazeVector[] exclude)
 		{
-			for(int attempts = 20; attempts >= 0; attempts--)
+			for(int attempts = 100; attempts >= 0; attempts--)
 			{
 				var pos = RandomPoint();
 				if(exclude.Contains(pos)) continue;
 				var piece = m.GetPieceAt(pos);
+				if(piece == null) continue;
 				var cc = piece.ConnectionCount;
 				if(cc > 0 && cc < 4) return pos;
 			}
 			return new MazeVector();
+		}
+
+		private void PlaceHints()
+		{
+			Random.InitState(seed + 11);
+			if(hintLevel > 0 && hintArrowPrefab)
+			{
+				for(int i = 3; i < shortestPath.PathLength - 1; i += 2)
+				{
+					if(RandomUtilities.Probability(hintLevel))
+					{
+						var pos = shortestPath.GetPositionAtIndex(i);
+						var inst = Instantiate(hintArrowPrefab, transform);
+						inst.transform.localPosition = new Vector3(pos[0] * mazeScale, 0, pos[1] * mazeScale);
+						inst.transform.localEulerAngles = new Vector3(0, shortestPath.directions[i].HorizontalAngle, 0);
+					}
+				}
+			}
 		}
 
 		private MazeVector RandomPoint()
@@ -355,5 +384,5 @@ namespace TwoWorlds
 		{
 			return new Vector3(mv.x * mazeScale, 0, mv.y * mazeScale);
 		}
-	} 
+	}
 }

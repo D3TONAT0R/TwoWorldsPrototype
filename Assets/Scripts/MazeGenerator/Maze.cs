@@ -83,10 +83,14 @@ namespace MazeGen {
 			}
 		}
 
-		public void JoinPieces(MazeVector pos, Direction direction)
+		public void JoinPieces(MazeVector pos, Direction direction, bool checkOther = false)
 		{
 			MazePiece p1 = GetPieceAt(pos);
 			MazePiece p2 = GetPieceAt(pos.Move(direction));
+			if(checkOther && (p1 == null || p2 == null))
+			{
+				return;
+			}
 			if(p1 != null) p1.ConnectTo(direction);
 			if(p2 != null) p2.ConnectTo(direction.Inverse);
 		}
