@@ -83,7 +83,7 @@ namespace MazeGen {
 			}
 		}
 
-		public void JoinPieces(MazeVector pos, Facing direction)
+		public void JoinPieces(MazeVector pos, Direction direction)
 		{
 			MazePiece p1 = GetPieceAt(pos);
 			MazePiece p2 = GetPieceAt(pos.Move(direction));

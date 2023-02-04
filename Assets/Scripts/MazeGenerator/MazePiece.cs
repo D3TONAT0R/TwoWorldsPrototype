@@ -8,21 +8,21 @@ namespace MazeGen {
 	public class MazePiece {
 
 		public int dims;
-		public SortedSet<Facing> directions = new SortedSet<Facing>();
+		public SortedSet<Direction> directions = new SortedSet<Direction>();
 		public int iterationNum;
 
-		public bool North => directions.Contains(Facing.north);
-		public bool East => directions.Contains(Facing.east);
-		public bool South => directions.Contains(Facing.south);
-		public bool West => directions.Contains(Facing.west);
-		public bool Down => directions.Contains(Facing.down);
-		public bool Up => directions.Contains(Facing.up);
+		public bool North => directions.Contains(Direction.north);
+		public bool East => directions.Contains(Direction.east);
+		public bool South => directions.Contains(Direction.south);
+		public bool West => directions.Contains(Direction.west);
+		public bool Down => directions.Contains(Direction.down);
+		public bool Up => directions.Contains(Direction.up);
 
 		public string Binary {
 			get {
 				StringBuilder sb = new StringBuilder();
 				for(int i = 0; i < dims*2; i++) {
-					sb.Append(directions.Contains(new Facing(i)) ? "1" : "0");
+					sb.Append(directions.Contains(new Direction(i)) ? "1" : "0");
 				}
 				return sb.ToString();
 			}
@@ -49,23 +49,23 @@ namespace MazeGen {
 
 		public bool this[byte i] {
 			get {
-				return this[new Facing(i)];
+				return this[new Direction(i)];
 			}
 		}
-		public bool this[Facing i] {
+		public bool this[Direction i] {
 			get {
 				return directions.Contains(i);
 			}
 		}
 
-		public MazePiece(int dimensions, params Facing[] dirs) {
+		public MazePiece(int dimensions, params Direction[] dirs) {
 			dims = dimensions;
 			foreach(var d in dirs) {
 				directions.Add(d);
 			}
 		}
 
-		public void ConnectTo(Facing facing) {
+		public void ConnectTo(Direction facing) {
 			directions.Add(facing);
 		}
 	} 

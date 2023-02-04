@@ -97,9 +97,11 @@ namespace TwoWorlds
 		public bool openStart;
 		public bool openEnd;
 
-
+		private MazeVector startPos;
 		private GameObject startBedInstance;
+		private MazeVector destinationPos;
 		private GameObject destinationBedInstance;
+		private MazePath shortestPath;
 
 		private void Awake()
 		{
@@ -136,6 +138,11 @@ namespace TwoWorlds
 			var maze = BuildMaze();
 			Decorate(maze);
 			PlaceBeds(maze);
+			shortestPath = MazeNavigator.CalculatePath(maze, startPos, destinationPos);
+			if(shortestPath == null)
+			{
+				Debug.LogError("No path was found from start to destination.");
+			}
 		}
 
 		private Maze BuildMaze()
@@ -216,11 +223,11 @@ namespace TwoWorlds
 							{
 								bool c = prefab.placementRule == DecorationPrefab.PlacementRule.FaceOpening;
 
-								List<Facing> facings = new List<Facing>();
-								if(p.North == c) facings.Add(Facing.north);
-								if(p.East == c) facings.Add(Facing.east);
-								if(p.South == c) facings.Add(Facing.south);
-								if(p.West == c) facings.Add(Facing.west);
+								List<Direction> facings = new List<Direction>();
+								if(p.North == c) facings.Add(Direction.north);
+								if(p.East == c) facings.Add(Direction.east);
+								if(p.South == c) facings.Add(Direction.south);
+								if(p.West == c) facings.Add(Direction.west);
 
 								if(facings.Count > 0)
 								{
@@ -236,17 +243,19 @@ namespace TwoWorlds
 		private void PlaceBeds(Maze m)
 		{
 			Random.InitState(seed + 2);
-			PlaceWallFacingObjectAt(m, PickValidBedSpawn(m), startBedPrefab);
-			PlaceWallFacingObjectAt(m, PickValidBedSpawn(m), destinationBedPrefab);
+			startPos = PickValidBedSpawn(m);
+			destinationPos = PickValidBedSpawn(m);
+			PlaceWallFacingObjectAt(m, startPos, startBedPrefab);
+			PlaceWallFacingObjectAt(m, destinationPos, destinationBedPrefab);
 		}
 
 		private void PlaceWallFacingObjectAt(Maze m, MazeVector v, GameObject prefab)
 		{
 			var piece = m.GetPieceAt(v);
-			Facing dir = new Facing(255);
+			Direction dir = new Direction(255);
 			for(int i = 0; i < 4; i++)
 			{
-				var f = new Facing(i);
+				var f = new Direction(i);
 				if(!piece.directions.Contains(f))
 				{
 					dir = f;
@@ -274,6 +283,29 @@ namespace TwoWorlds
 		private MazeVector RandomPoint()
 		{
 			return new MazeVector(Random.Range(0, width), Random.Range(0, height));
+		}
+
+		private void OnDrawGizmos()
+		{
+			if(shortestPath == null) return;
+			Gizmos.color = Color.red.SetAlpha(0.5f);
+			for(int i = 0; i <= shortestPath.directions.Count; i++)
+			{
+				Gizmos.DrawWireSphere(MazeVectorToPos(shortestPath.GetPositionAtIndex(i)), 0.25f);
+			}
+
+			Vector3 p1 = MazeVectorToPos(startPos);
+			for(int i = 1; i <= shortestPath.directions.Count; i++)
+			{
+				Vector3 p2 = MazeVectorToPos(shortestPath.GetPositionAtIndex(i));
+				Gizmos.DrawLine(p1, p2);
+				p1 = p2;
+			}
+		}
+
+		private Vector3 MazeVectorToPos(MazeVector mv)
+		{
+			return new Vector3(mv.x * mazeScale, 0, mv.y * mazeScale);
 		}
 	} 
 }

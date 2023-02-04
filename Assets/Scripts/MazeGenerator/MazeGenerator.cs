@@ -51,21 +51,21 @@ namespace MazeGen
 				{
 					mazeBounds = bounds
 				};
-				var start = new MazePiece(dims, Facing.north); //Every maze starts with a piece heading north
+				var start = new MazePiece(dims, Direction.north); //Every maze starts with a piece heading north
 				maze.mazemap.Add(startPos.ToString(), start);
 				if(openStart)
 				{
-					maze.JoinPieces(startPos, Facing.south);
+					maze.JoinPieces(startPos, Direction.south);
 				}
 				maze.startPosition = startPos;
-				if(!Drunkard(startPos, Facing.north, 0, out _) && requireValidMaze)
+				if(!Drunkard(startPos, Direction.north, 0, out _) && requireValidMaze)
 				{
 					//Maze gen attempt failed, try again
 					continue;
 				}
 				if(maze.endPosition.Valid && openEnd)
 				{
-					maze.JoinPieces(maze.endPosition, Facing.north);
+					maze.JoinPieces(maze.endPosition, Direction.north);
 				}
 				FillEmptySpaces(0);
 				return maze;
@@ -86,20 +86,20 @@ namespace MazeGen
 					bool b = Chance(0.5f);
 					if(b)
 					{
-						maze.JoinPieces(new MazeVector(pos), Facing.north);
+						maze.JoinPieces(new MazeVector(pos), Direction.north);
 					}
 					else
 					{
-						maze.JoinPieces(new MazeVector(pos), Facing.east);
+						maze.JoinPieces(new MazeVector(pos), Direction.east);
 					}
 				}
 			}
 		}
 
-		private bool Drunkard(MazeVector startPos, Facing? startFacing, int iteration, out int length)
+		private bool Drunkard(MazeVector startPos, Direction? startFacing, int iteration, out int length)
 		{
 			length = 0;
-			Facing facing = startFacing ?? PickRandomValidDir(startPos);
+			Direction facing = startFacing ?? PickRandomValidDir(startPos);
 			var pos = startPos;
 			int lengthInDim = 0;
 			while(length < 1000)
@@ -111,7 +111,7 @@ namespace MazeGen
 				}
 				else
 				{
-					if(maxLengthInDim[facing.dim] > 0 && lengthInDim >= maxLengthInDim[facing.dim] && length > 0)
+					if(maxLengthInDim[facing.Dimension] > 0 && lengthInDim >= maxLengthInDim[facing.Dimension] && length > 0)
 					{
 						//We've reached the max straight length for that dimension, pick a new one
 						pickNew = true;
@@ -159,7 +159,7 @@ namespace MazeGen
 		{
 			if(iteration >= maxEmptySpaceFillIterations) return;
 			iteration++;
-			List<(MazeVector pos, Facing from)> emptyNeighbors = new List<(MazeVector pos, Facing from)>();
+			List<(MazeVector pos, Direction from)> emptyNeighbors = new List<(MazeVector pos, Direction from)>();
 			foreach(var posStr in maze.mazemap.Keys)
 			{
 				var pos = new MazeVector(posStr);
@@ -183,19 +183,19 @@ namespace MazeGen
 			FillEmptySpaces(iteration);
 		}
 
-		private Facing PickRandomWallFacing(MazePiece piece, Random random)
+		private Direction PickRandomWallFacing(MazePiece piece, Random random)
 		{
-			List<Facing> picks = new List<Facing>();
+			List<Direction> picks = new List<Direction>();
 			for(int i = 0; i < dims * 2; i++)
 			{
-				var f = new Facing(i);
+				var f = new Direction(i);
 				if(!piece.directions.Contains(f)) picks.Add(f);
 			}
-			if(picks.Count == 0) return Facing.invalid;
+			if(picks.Count == 0) return Direction.invalid;
 			return picks[random.Next(picks.Count)];
 		}
 
-		private Facing PickRandomValidDir(MazeVector pos, params int[] exclude)
+		private Direction PickRandomValidDir(MazeVector pos, params int[] exclude)
 		{
 			var dirs = GetValidDirs(pos, exclude);
 			if(dirs.Length > 0)
@@ -204,18 +204,18 @@ namespace MazeGen
 			}
 			else
 			{
-				return Facing.invalid;
+				return Direction.invalid;
 			}
 		}
 
-		private Facing[] GetValidDirs(MazeVector pos, params int[] exclude)
+		private Direction[] GetValidDirs(MazeVector pos, params int[] exclude)
 		{
 			var ex = new List<int>(exclude);
-			List<Facing> dirs = new List<Facing>();
+			List<Direction> dirs = new List<Direction>();
 			for(byte i = 0; i < dims * 2; i++)
 			{
 				if(ex.Contains(i)) continue;
-				var f = new Facing(i);
+				var f = new Direction(i);
 				if(maze.IsEmptySpace(pos.Move(f))) dirs.Add(f);
 			}
 			return dirs.ToArray();

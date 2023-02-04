@@ -68,9 +68,9 @@ namespace MazeGen {
 			}
 		}
 
-		public MazeVector Move(Facing facing) {
+		public MazeVector Move(Direction facing) {
 			var pos = new MazeVector(vector.ToArray());
-			var axis = facing.dim;
+			var axis = facing.Dimension;
 			bool forward = facing.value % 2 == 1;
 			int dir = forward ? 1 : -1;
 			var v = pos.Get(axis);
@@ -100,6 +100,16 @@ namespace MazeGen {
 				s += "," + vector[i];
 			}
 			return s;
+		}
+
+		public static bool operator== (MazeVector l, MazeVector r)
+		{
+			return l.ToString() == r.ToString();
+		}
+
+		public static bool operator!= (MazeVector l, MazeVector r)
+		{
+			return l.ToString() == r.ToString();
 		}
 	} 
 }
