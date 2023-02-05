@@ -5,16 +5,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MyNamespace
+namespace TwoWorlds
 {
 	public class Bed : MonoBehaviour, IInteractiveHoverable
 	{
-		public bool CanInteract => enabled;
+		private bool interacted = false;
+
+		public bool CanInteract => !interacted;
 
 		public bool Interact(Transform player)
 		{
-			enabled = false;
-			GameLevelLoader.LoadRandomGameWorld();
+			interacted = true;
+			Player.instance.canControl = false;
+			TransitionPlayer.BeginTransition(() => GameLevelLoader.LoadRandomGameWorld());
 			return true;
 		}
 
