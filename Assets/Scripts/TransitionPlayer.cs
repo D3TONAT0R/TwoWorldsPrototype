@@ -42,11 +42,17 @@ namespace TwoWorlds
 			bool gameWorld = GameLevelLoader.IsGameWorld();
 			string stateName = gameWorld ? "Game Out" : "Maze Out";
 			instance.animator.Play(stateName);
-			yield return 0;
-			var state = instance.animator.GetCurrentAnimatorClipInfo(0)[0].clip;
-			Debug.Log(state.length);
-			yield return new WaitForSeconds(state.length);
+			yield return new WaitForSeconds(GetClipLength(stateName));
 			if(callback != null) callback.Invoke();
+		}
+
+		private float GetClipLength(string name)
+		{
+			foreach(var clip in animator.runtimeAnimatorController.animationClips)
+			{
+				if(clip.name == name) return clip.length;
+			}
+			return 0;
 		}
 
 		public bool OnReceiveSignal(bool state, int extraData)
