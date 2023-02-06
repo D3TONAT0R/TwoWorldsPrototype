@@ -70,7 +70,7 @@ namespace TwoWorlds
 		public GameObject destinationBedPrefab;
 
 		[Header("Settings")]
-		public bool randomSeed;
+		public bool autoRandomSeed;
 		public int seed = 1234;
 		public bool autoRegenerate;
 
@@ -135,13 +135,17 @@ namespace TwoWorlds
 		[ContextMenu("Generate Maze")]
 		public void Generate()
 		{
+			shortestPath = null;
 			if(GameLevelLoader.nextMazeSettings != null)
 			{
 				width = GameLevelLoader.nextMazeSettings.width;
 				height = GameLevelLoader.nextMazeSettings.height;
 				complexity = GameLevelLoader.nextMazeSettings.complexity;
 			}
-			shortestPath = null;
+			if(autoRandomSeed && Application.isPlaying)
+			{
+				seed = Random.Range(0, 10000);
+			}
 			maze = BuildMaze();
 			if(applyDecorations)
 			{
@@ -160,10 +164,6 @@ namespace TwoWorlds
 		{
 			Clear();
 			mazeGeometry = new Dictionary<MazeVector, Transform>();
-			if(randomSeed)
-			{
-				seed = Random.Range(0, 10000);
-			}
 			MazeGenerator gen = new MazeGenerator(width, height)
 			{
 				mazeComplexity = complexity,
