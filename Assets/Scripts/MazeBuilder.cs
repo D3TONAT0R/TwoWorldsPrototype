@@ -66,6 +66,7 @@ namespace TwoWorlds
 
 		[Header("Prefabs")]
 		public MazePiecePrefabs mazePiecePrefabs;
+		public bool generateBeds = true;
 		public GameObject startBedPrefab;
 		public GameObject destinationBedPrefab;
 
@@ -152,7 +153,10 @@ namespace TwoWorlds
 				Decorate(1, decorations, decorationAmount);
 				Decorate(2, illumination, illuminationAmount);
 			}
-			PlaceBeds();
+			if(generateBeds)
+			{
+				PlaceBeds();
+			}
 			PlaceHints();
 			if(shortestPath == null)
 			{
@@ -203,7 +207,7 @@ namespace TwoWorlds
 						}
 						if(prefab)
 						{
-							var instance = Instantiate(prefab, transform);
+							var instance = CreateInstanceOfPrefab(prefab);
 							instance.transform.localPosition = new Vector3(x * mazeScale, 0, z * mazeScale);
 							mazeGeometry.Add(pos, instance.transform);
 						}
@@ -242,7 +246,7 @@ namespace TwoWorlds
 						}
 						if(prefab.gameObject)
 						{
-							var instance = Instantiate(prefab.gameObject, transform);
+							var instance = CreateInstanceOfPrefab(prefab.gameObject);
 							instance.transform.localPosition = new Vector3(x * mazeScale, 0, z * mazeScale);
 							if(prefab.placementRule != DecorationPrefab.PlacementRule.None)
 							{
@@ -319,7 +323,7 @@ namespace TwoWorlds
 					break;
 				}
 			}
-			var inst = Instantiate(prefab, transform);
+			var inst = CreateInstanceOfPrefab(prefab);
 			inst.transform.localPosition = new Vector3(pos[0] * mazeScale, 0, pos[1] * mazeScale);
 			inst.transform.localEulerAngles = new Vector3(0, dir.HorizontalAngle, 0);
 			return inst.transform;
@@ -349,7 +353,7 @@ namespace TwoWorlds
 					if(RandomUtilities.Probability(hintLevel))
 					{
 						var pos = shortestPath.GetPositionAtIndex(i);
-						var inst = Instantiate(hintArrowPrefab, transform);
+						var inst = CreateInstanceOfPrefab(hintArrowPrefab);
 						inst.transform.localPosition = new Vector3(pos[0] * mazeScale, 0, pos[1] * mazeScale);
 						inst.transform.localEulerAngles = new Vector3(0, shortestPath.directions[i].HorizontalAngle, 0);
 					}
@@ -383,6 +387,22 @@ namespace TwoWorlds
 		private Vector3 MazeVectorToPos(MazeVector mv)
 		{
 			return new Vector3(mv.x * mazeScale, 0, mv.y * mazeScale);
+		}
+
+		private GameObject CreateInstanceOfPrefab(GameObject prefab)
+		{
+#if UNITY_EDITOR
+			if(!Application.isPlaying && UnityEditor.PrefabUtility.IsPartOfPrefabAsset(prefab))
+			{
+				return (GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(prefab, transform);
+			}
+			else
+			{
+				return Instantiate(prefab, transform);
+			}
+#else
+			return Instantiate(prefab, transform);
+#endif
 		}
 	}
 }
