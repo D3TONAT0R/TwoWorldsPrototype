@@ -6,15 +6,15 @@ using UnityEngine;
 
 namespace TwoWorlds
 {
-	public class CheckMazeLevel : TriggerCondition
+	public class CheckMazeVisitCount : TriggerCondition
 	{
 		public ComparisonOperator comparison;
-		public int level;
+		public int visits;
 
 		protected override bool Evaluate()
 		{
 			if(PlaySession.Current == null) return false;
-			return comparison.Compare(PlaySession.Current.mazeLevel, level);
+			return comparison.Compare(PlaySession.Current.totalMazeVisits, visits);
 		}
 	}
 }

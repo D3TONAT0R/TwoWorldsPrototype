@@ -6,9 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MazeScene.unity
+    path: Assets/Scenes/Maze.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
     path: Assets/Scenes/Game_Test.unity
     guid: 89a2f40b0a2d71c4f8f01e3a872cb2b6
+  - enabled: 1
+    path: Assets/Scenes/InfiniteMaze.unity
+    guid: 0b11465dd2270644185e3650e01f8e9c
   m_configObjects: {}

@@ -11,18 +11,17 @@ namespace TwoWorlds
 
 		private Animator animator;
 
-		private void Awake()
+		private void Start()
 		{
 			instance = this;
-			if(GameLevelLoader.mazeLevel == 0) GameLevelLoader.mazeLevel = 1;
 			animator = GetComponent<Animator>();
-			if(GameLevelLoader.IsGameWorld())
+			if(GameLevelLoader.IsGameWorld)
 			{
 				animator.Play("Game In");
 			}
 			else
 			{
-				animator.Play(GameLevelLoader.mazeLevel == 1 ? "Intro" : "Maze In");
+				animator.Play(PlaySession.Current.totalMazeVisits <= 1 ? "Intro" : "Maze In");
 			}
 		}
 
@@ -39,8 +38,7 @@ namespace TwoWorlds
 
 		IEnumerator BeginTransitionCoroutine(System.Action callback)
 		{
-			bool gameWorld = GameLevelLoader.IsGameWorld();
-			string stateName = gameWorld ? "Game Out" : "Maze Out";
+			string stateName = GameLevelLoader.IsGameWorld ? "Game Out" : "Maze Out";
 			instance.animator.Play(stateName);
 			yield return new WaitForSeconds(GetClipLength(stateName));
 			if(callback != null) callback.Invoke();

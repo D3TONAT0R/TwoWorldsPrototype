@@ -10,8 +10,6 @@ namespace TwoWorlds
 		public bool autoMazeScale = true;
 		[DrawIf(nameof(autoMazeScale), false)]
 		public int fixedSize = 8;
-		[DrawIf(nameof(autoMazeScale), false)]
-		public float fixedComplexity = 0.5f;
 
 		protected override void Execute(bool state)
 		{
@@ -21,7 +19,7 @@ namespace TwoWorlds
 			}
 			else
 			{
-				GameLevelLoader.LoadMaze(fixedSize, fixedComplexity);
+				GameLevelLoader.LoadMaze(fixedSize);
 			}
 		}
 	} 

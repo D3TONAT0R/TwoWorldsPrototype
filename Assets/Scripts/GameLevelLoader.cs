@@ -1,6 +1,7 @@
 ﻿using D3T;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -27,32 +28,51 @@ namespace TwoWorlds
 		"Game_Test"
 		};
 
-		const string mazeSceneName = "MazeScene";
+		const string mazeSceneName = "Maze";
 
-		public static int mazeLevel = 0;
+		const string infiniteMazeSceneName = "InfiniteMaze";
+
 		public static MazeSettings nextMazeSettings;
+
+
+		public static bool IsGameWorld => gameSceneNames.Contains(SceneManager.GetActiveScene().name);
+		public static bool IsMazeWorld => IsNormalMaze || IsInfiniteMaze;
+		public static bool IsNormalMaze => SceneManager.GetActiveScene().name == mazeSceneName;
+		public static bool IsInfiniteMaze => SceneManager.GetActiveScene().name == infiniteMazeSceneName;
+
 
 		public static void LoadRandomGameWorld()
 		{
 			LevelManager.LoadLevel(RandomUtilities.PickRandom(gameSceneNames));
 		}
 
-		public static void LoadMaze(int size, float complexity)
+		public static void LoadMaze(int level)
 		{
-			nextMazeSettings = new MazeSettings(size, size, complexity);
-			LevelManager.LoadLevel(mazeSceneName);
-			CoroutineRunner.InvokeWithFrameDelay(() => nextMazeSettings = null);
+			if(level >= 0)
+			{
+				int size = level + 2;
+				nextMazeSettings = new MazeSettings(size, size, 1f);
+				LevelManager.LoadLevel(mazeSceneName);
+				CoroutineRunner.InvokeWithFrameDelay(() => nextMazeSettings = null);
+			}
+			else
+			{
+				LevelManager.LoadLevel(infiniteMazeSceneName);
+			}
+			PlaySession.Current.totalMazeVisits++;
 		}
 
 		public static void LoadMaze()
 		{
-			mazeLevel++;
-			LoadMaze(3 + mazeLevel, 1f);
-		}
-
-		public static bool IsGameWorld()
-		{
-			return !SceneManager.GetActiveScene().name.StartsWith("Maze");
+			if(PlaySession.Current.Score >= 0)
+			{
+				PlaySession.Current.mazeLevel++;
+			}
+			else
+			{
+				PlaySession.Current.mazeLevel--;
+			}
+			LoadMaze(PlaySession.Current.mazeLevel);
 		}
 	} 
 }
