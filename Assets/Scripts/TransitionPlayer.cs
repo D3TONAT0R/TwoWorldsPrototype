@@ -21,7 +21,8 @@ namespace TwoWorlds
 			}
 			else
 			{
-				animator.Play(PlaySession.Current.totalMazeVisits <= 1 ? "Intro" : "Maze In");
+				bool firstTime = PlaySession.Current.totalMazeVisits <= 1 && GameLevelLoader.IsNormalMaze;
+				animator.Play(firstTime ? "Intro" : "Maze In");
 			}
 		}
 

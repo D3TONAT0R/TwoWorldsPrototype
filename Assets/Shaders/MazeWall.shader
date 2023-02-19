@@ -28,6 +28,7 @@
 			float2 uv_MainTex;
 			float3 worldPos;
 			float3 worldNormal;
+			float face : VFACE;
 		};
 
 		half _Glossiness;
@@ -41,7 +42,7 @@
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
 		// #pragma instancing_options assumeuniformscaling
 		UNITY_INSTANCING_BUFFER_START(Props)
-			// put more per-instance properties here
+		// put more per-instance properties here
 		UNITY_INSTANCING_BUFFER_END(Props)
 
 		void surf (Input IN, inout SurfaceOutputStandard o)
@@ -58,6 +59,11 @@
 				o.Albedo *= _TopTint;
 				o.Metallic = 0;
 				o.Smoothness = 0;
+			}
+
+			if(_WorldSpaceCameraPos.y > _YThreshold && IN.worldPos.y > _YThreshold)
+			{
+				discard;
 			}
 
 			o.Alpha = c.a;
