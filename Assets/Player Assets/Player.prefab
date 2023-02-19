@@ -139,9 +139,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canControl: 1
   m_WalkSpeed:
-    forward: 1.5
-    sideways: 1.4
-    backwards: 1.2
+    forward: 5
+    sideways: 4.5
+    backwards: 4
   accelerationRate: 6
   decelerationRate: 6
   m_MouseLook:
@@ -208,15 +208,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   running:
-    enabled: 1
+    enabled: 0
     enableInput: 1
-    force: 1
+    force: 0
     movementSpeed:
       forward: 5
       sideways: 4
       backwards: 3.5
   secondaryMovementState:
-    enabled: 1
+    enabled: 0
     enableInput: 1
     force: 0
     movementSpeed:

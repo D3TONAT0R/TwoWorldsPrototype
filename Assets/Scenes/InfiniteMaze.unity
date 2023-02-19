@@ -151,7 +151,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 01c7c46b4b8561e4cbf15011ca232533, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.12
+  m_Volume: 0.2
   m_Pitch: 0.15
   Loop: 1
   Mute: 0
@@ -414,7 +414,7 @@ GameObject:
   - component: {fileID: 235495870}
   - component: {fileID: 235495869}
   m_Layer: 0
-  m_Name: tnscities_FS344278_tim-kahn
+  m_Name: Music
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -962,8 +962,8 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: c9a8ee135c62b4244bb61cc7f39d64c0, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.07
-  m_Pitch: 0.7
+  m_Volume: 0.15
+  m_Pitch: 0.8
   Loop: 1
   Mute: 0
   Spatialize: 0
@@ -1746,29 +1746,43 @@ MonoBehaviour:
     _1101: {fileID: 261706910774849977, guid: 94e6b587103c61049b34ce4adf6d49bc, type: 3}
     _1110: {fileID: 261706910774849977, guid: 30466ddaf19a3e94faead6ce2d65d898, type: 3}
     _1111: {fileID: 261706910774849977, guid: abe4802732da6144cb5abcd368cea3a0, type: 3}
+  roomPiecePrefab: {fileID: 261706910774849977, guid: 8734a4a7348cd5e48b391f4667a870c6,
+    type: 3}
   mazeScale: 7
   defaultSettings:
     connectionProbability: 0.7
     decorationAmount: 0.02
     decorations:
-    - weight: 24
+    - weight: 35
       gameObject: {fileID: 4022302690528105374, guid: ab7406ace92414c4ba6622e80a1aa23a,
+        type: 3}
+      placementRule: 0
+    - weight: 20
+      gameObject: {fileID: 3045517075251488632, guid: 68010baf6c0d04549915f3de708bf7d5,
         type: 3}
       placementRule: 0
     - weight: 1
       gameObject: {fileID: 3500260047796229232, guid: 0850fe1b4d6dc384b8e2ab66e0991057,
         type: 3}
       placementRule: 0
+  roomProbability: 0.25
+  hintPrefab: {fileID: 6349511075769982020, guid: d71c64dfd262e5644b78450f7737c99c,
+    type: 3}
+  hintAmount: 0.02
   spawnAreaRadius: 3
   spawnAreaSettings:
     connectionProbability: 0.9
     decorationAmount: 0.5
     decorations:
-    - weight: 1
+    - weight: 3
       gameObject: {fileID: 4022302690528105374, guid: ab7406ace92414c4ba6622e80a1aa23a,
         type: 3}
       placementRule: 0
-  viewDistance: 8
+    - weight: 1
+      gameObject: {fileID: 3045517075251488632, guid: 68010baf6c0d04549915f3de708bf7d5,
+        type: 3}
+      placementRule: 0
+  viewDistance: 16
   viewOriginOverride: {fileID: 0}
 --- !u!4 &1677442232
 Transform:
@@ -1828,8 +1842,8 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 9ace0b12223156a468d7f5a075872813, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.04
-  m_Pitch: 0.7
+  m_Volume: 0.03
+  m_Pitch: 0.6
   Loop: 1
   Mute: 0
   Spatialize: 0
@@ -2052,26 +2066,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1148757992, guid: 5e52ddca75935e547b502b03fe0c6c24, type: 3}
-      propertyPath: stepSounds.fallbackStepSounds.jumpSounds.Array.data[4]
-      value: 
-      objectReference: {fileID: 8300000, guid: db2281b9de1863f409d62f9edf69c6cf, type: 3}
-    - target: {fileID: 1148757992, guid: 5e52ddca75935e547b502b03fe0c6c24, type: 3}
-      propertyPath: stepSounds.fallbackStepSounds.jumpSounds.Array.data[5]
-      value: 
-      objectReference: {fileID: 8300000, guid: a465f4e2a2f3a354f927f77994a68a08, type: 3}
-    - target: {fileID: 1148757998, guid: 5e52ddca75935e547b502b03fe0c6c24, type: 3}
-      propertyPath: running.force
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1148757998, guid: 5e52ddca75935e547b502b03fe0c6c24, type: 3}
-      propertyPath: running.enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1148757998, guid: 5e52ddca75935e547b502b03fe0c6c24, type: 3}
-      propertyPath: secondaryMovementState.enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1275344174594100, guid: 5e52ddca75935e547b502b03fe0c6c24, type: 3}
       propertyPath: m_Name
       value: Player
@@ -4518,21 +4512,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ConnectedAnchor.z
       value: 0.06938454
-      objectReference: {fileID: 0}
-    - target: {fileID: 3941799936064062150, guid: 5e52ddca75935e547b502b03fe0c6c24,
-        type: 3}
-      propertyPath: m_WalkSpeed.forward
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3941799936064062150, guid: 5e52ddca75935e547b502b03fe0c6c24,
-        type: 3}
-      propertyPath: m_WalkSpeed.sideways
-      value: 4.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3941799936064062150, guid: 5e52ddca75935e547b502b03fe0c6c24,
-        type: 3}
-      propertyPath: m_WalkSpeed.backwards
-      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4462915463893938268, guid: 5e52ddca75935e547b502b03fe0c6c24,
         type: 3}

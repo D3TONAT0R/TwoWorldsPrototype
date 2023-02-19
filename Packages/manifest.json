@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "com.github.d3tonat0r.actioncore": "https://github.com/d3tonat0r/unitypackage-actioncore.git#1.0.13",
-    "com.github.d3tonat0r.core": "https://github.com/d3tonat0r/unitypackage-core.git#0.9.50",
-    "com.github.d3tonat0r.firstpersoncontroller": "https://github.com/d3tonat0r/unitypackage-firstpersoncontroller.git#0.9.22",
+    "com.github.d3tonat0r.actioncore": "https://github.com/d3tonat0r/unitypackage-actioncore.git#1.0.14",
+    "com.github.d3tonat0r.core": "https://github.com/d3tonat0r/unitypackage-core.git#0.9.51",
+    "com.github.d3tonat0r.firstpersoncontroller": "https://github.com/d3tonat0r/unitypackage-firstpersoncontroller.git#0.9.23",
     "com.github.d3tonat0r.packagemanager": "https://github.com/d3tonat0r/unitygitpackagemanager.git",
     "com.github.d3tonat0r.postprocessing": "https://github.com/d3tonat0r/unitypackage-postprocessing.git#0.9.10",
     "com.github.d3tonat0r.prototyping": "https://github.com/d3tonat0r/unitypackage-prototyping.git#0.9.4",

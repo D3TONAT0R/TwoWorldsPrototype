@@ -23,10 +23,7 @@ namespace TwoWorlds
 			}
 		}
 
-		private static string[] gameSceneNames = new string[]
-		{
-		"Game_Test"
-		};
+		private static List<string> gameSceneNames;
 
 		const string mazeSceneName = "Maze";
 
@@ -40,6 +37,19 @@ namespace TwoWorlds
 		public static bool IsNormalMaze => SceneManager.GetActiveScene().name == mazeSceneName;
 		public static bool IsInfiniteMaze => SceneManager.GetActiveScene().name == infiniteMazeSceneName;
 
+		[StaticInit]
+		private static void Init()
+		{
+			gameSceneNames = new List<string>();
+			for(int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+			{
+				var sceneName = SceneManager.GetSceneByBuildIndex(i).name;
+				if(sceneName != null && sceneName.StartsWith("Game-"))
+				{
+					gameSceneNames.Add(sceneName);
+				}
+			}
+		}
 
 		public static void LoadRandomGameWorld()
 		{
@@ -74,5 +84,5 @@ namespace TwoWorlds
 			}
 			LoadMaze(PlaySession.Current.mazeLevel);
 		}
-	} 
+	}
 }

@@ -21,8 +21,14 @@ namespace TwoWorlds
 		public int seed;
 		[Space(20)]
 		public MazeBuilder.MazePiecePrefabs mazePiecePrefabs;
+		public GameObject roomPiecePrefab;
 		public float mazeScale = 5f;
 		public MazeSubtypeSettings defaultSettings;
+		[Range(0,1)]
+		public float roomProbability = 0.1f;
+		public GameObject hintPrefab;
+		[Range(0, 0.1f)]
+		public float hintAmount = 0.01f;
 
 		[Space(20)]
 		[Range(0, 5)]
@@ -30,7 +36,7 @@ namespace TwoWorlds
 		public MazeSubtypeSettings spawnAreaSettings;
 
 		[Space(20)]
-		[Range(1, 10)]
+		[Range(1, 20)]
 		public int viewDistance = 5;
 		public Transform viewOriginOverride;
 
@@ -89,6 +95,12 @@ namespace TwoWorlds
 							var decInst = Instantiate(prefab, inst);
 							decInst.transform.localPosition = Vector3.zero;
 						}
+						if(subtype != spawnAreaSettings && RandomUtilities.Probability(hintAmount))
+						{
+							var hintInst = Instantiate(hintPrefab, inst);
+							hintInst.transform.localPosition = Vector3.zero;
+							hintInst.transform.eulerAngles = new Vector3(0, Random.Range(0, 8) * 45, 0);
+						}
 					}
 				}
 			}
@@ -108,12 +120,20 @@ namespace TwoWorlds
 				connections = CreateRandomPiece(loc, subtype.connectionProbability);
 				generatedMaze.Add(loc, connections);
 			}
-			int i = 0;
-			if(connections.North) i += 1 << 3;
-			if(connections.East) i += 1 << 2;
-			if(connections.South) i += 1 << 1;
-			if(connections.West) i += 1 << 0;
-			var prefab = mazePiecePrefabs.GetPiece(i);
+			GameObject prefab;
+			if(IsRoom(loc))
+			{
+				prefab = roomPiecePrefab;
+			}
+			else
+			{
+				int i = 0;
+				if(connections.North) i += 1 << 3;
+				if(connections.East) i += 1 << 2;
+				if(connections.South) i += 1 << 1;
+				if(connections.West) i += 1 << 0;
+				prefab = mazePiecePrefabs.GetPiece(i);
+			}
 			var inst = Instantiate(prefab, transform).transform;
 			inst.position = new Vector3(loc.x * mazeScale, 0, loc.y * mazeScale);
 			return inst;
@@ -144,6 +164,34 @@ namespace TwoWorlds
 			{
 				if(RandomUtilities.Probability(connectionProb)) mp.ConnectTo(dir);
 			}
+		}
+
+		private bool IsRoom(Vector2Int loc)
+		{
+			int absX = Mathf.Abs(loc.x);
+			int absY = Mathf.Abs(loc.y);
+			if(absX < spawnAreaRadius + 2 && absY < spawnAreaRadius + 2)
+			{
+				return false;
+			}
+			if(absX <= 1 && absY <= 1)
+			{
+				return true;
+			}
+			for(int x = loc.x - 1; x <= loc.x + 1; x++)
+			{
+				for(int y = loc.y - 1; y <= loc.y + 1; y++)
+				{
+					if(IsRoomCenter(x,y)) return true;
+				}
+			}
+			return false;
+		}
+
+		private bool IsRoomCenter(int x, int y)
+		{
+			Random.InitState(seed + x * 1217 + y * 13 + 807);
+			return RandomUtilities.Probability(roomProbability * 0.11f);
 		}
 	}
 }

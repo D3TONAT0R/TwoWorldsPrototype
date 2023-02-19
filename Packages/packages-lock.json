@@ -1,38 +1,38 @@
 {
   "dependencies": {
     "com.github.d3tonat0r.actioncore": {
-      "version": "https://github.com/d3tonat0r/unitypackage-actioncore.git#1.0.13",
+      "version": "https://github.com/d3tonat0r/unitypackage-actioncore.git#1.0.14",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "2e1819fd457630c2c3e7f2d16346aec544777216"
+      "hash": "96d4dc533f9e23a20f7ae6654d7ec423db19c278"
     },
     "com.github.d3tonat0r.core": {
-      "version": "https://github.com/d3tonat0r/unitypackage-core.git#0.9.50",
+      "version": "https://github.com/d3tonat0r/unitypackage-core.git#0.9.51",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "com.unity.inputsystem": "1.2.0"
       },
-      "hash": "48ccc8fa1a3e102a50cde26e4cd0ff2b0ead8443"
+      "hash": "cec179d617a3fbcbb4f0a132e3b529796d267749"
     },
     "com.github.d3tonat0r.firstpersoncontroller": {
-      "version": "https://github.com/d3tonat0r/unitypackage-firstpersoncontroller.git#0.9.22",
+      "version": "https://github.com/d3tonat0r/unitypackage-firstpersoncontroller.git#0.9.23",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.github.d3tonat0r.core": "0.9.50",
-        "com.github.d3tonat0r.actioncore": "1.0.13",
+        "com.github.d3tonat0r.core": "0.9.51",
+        "com.github.d3tonat0r.actioncore": "1.0.14",
         "com.unity.inputsystem": "1.0.0"
       },
-      "hash": "f136614d567f896092da570d46f4ed9cad896b96"
+      "hash": "ea1bd7568d677337c67ee62245c70552f6a7a7c8"
     },
     "com.github.d3tonat0r.packagemanager": {
       "version": "https://github.com/d3tonat0r/unitygitpackagemanager.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "017d51e5c1f50db94a5c45200b9d1b18b3a96615"
+      "hash": "77dd62668a729fe3e8cae5f4a8c86ba02a4aae35"
     },
     "com.github.d3tonat0r.postprocessing": {
       "version": "https://github.com/d3tonat0r/unitypackage-postprocessing.git#0.9.10",
