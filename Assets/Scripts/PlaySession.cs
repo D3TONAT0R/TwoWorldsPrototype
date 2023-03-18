@@ -40,21 +40,14 @@ namespace TwoWorlds
 
 		public void AddScore(int s)
 		{
-			if(s < 0) throw new InvalidOperationException("Score addition value must be positive");
 			if(s == 0) return;
 			Score += s;
-			ScoreIncreased?.Invoke(s);
+			if(s > 0) ScoreIncreased?.Invoke(s);
+			else ScoreDecreased?.Invoke(s);
+
 		}
 
-		public void ReduceScore(int s)
-		{
-			if(s < 0) throw new InvalidOperationException("Score reduction value must be positive");
-			if(s == 0) return;
-			Score -= s;
-			ScoreDecreased?.Invoke(s);
-		}
-
-		public void ReduceScore(float delta)
+		public void ReduceScoreGradually(float delta)
 		{
 			if(Score > 0 && GameLevelLoader.IsNormalMaze)
 			{

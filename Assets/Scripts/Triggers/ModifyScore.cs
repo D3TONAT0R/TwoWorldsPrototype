@@ -11,15 +11,7 @@ namespace TwoWorlds
 
 		protected override void Execute(bool state)
 		{
-			if(change == 0) return;
-			if(change > 0)
-			{
-				PlaySession.Current.AddScore(change);
-			}
-			else
-			{
-				PlaySession.Current.ReduceScore(-change);
-			}
+			PlaySession.Current.AddScore(change);
 		}
 	} 
 }
