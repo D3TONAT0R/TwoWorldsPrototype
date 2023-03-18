@@ -13,6 +13,27 @@ using UnityEngine.InputSystem;
 namespace TwoWorlds.Lucrum {
 	public class LucrumGame : Minigame {
 
+		public static LucrumGame instance;
+
+		public int pointsPerCoin = 100;
+		public int pointsPerHit = -100;
+
+		private void Awake()
+		{
+			instance = this;
+		}
+
+		public void OnCoinCollected()
+		{
+			Score += pointsPerCoin;
+		}
+
+		public void OnHitTaken()
+		{
+			Score += pointsPerHit;
+		}
+
+		/*
 		#region Entities
 		[System.Serializable]
 		public class AnimatedBlock {
@@ -45,7 +66,7 @@ namespace TwoWorlds.Lucrum {
 			public MarioEntityBase(GameObject prefab, float posX, float posY, float zOrder) {
 				GameObject g = Instantiate(prefab);
 				t = g.transform;
-				t.parent = game.transform;
+				t.parent = instance.transform;
 				t.localScale = new Vector3(1, 1, 1);
 				t.localPosition = new Vector3(posX, posY, zOrder);
 				renderer = t.GetComponent<Renderer>();
@@ -65,7 +86,7 @@ namespace TwoWorlds.Lucrum {
 			protected void ApplyPhysics(bool mirrorSpeed) {
 				lastVel = velocity;
 				Vector2 nextPos = t.localPosition + (new Vector3(velocity.x, velocity.y) * Time.fixedDeltaTime);
-				if(useGravity) velocity.y -= game.gravity * Time.fixedDeltaTime;
+				if(useGravity) velocity.y -= instance.gravity * Time.fixedDeltaTime;
 				if(!applyCollisions) {
 					t.localPosition = nextPos.ToVector3();
 					return;
@@ -78,16 +99,16 @@ namespace TwoWorlds.Lucrum {
 				}
 				if(velocity.x < 0) {
 					//Detect left collision
-					if(game.GetBlock(nextPos.x - width, nextPos.y - width2) ||
-						game.GetBlock(nextPos.x - width, nextPos.y + width)) {
+					if(instance.GetBlock(nextPos.x - width, nextPos.y - width2) ||
+						instance.GetBlock(nextPos.x - width, nextPos.y + width)) {
 						if(GetType() == typeof(EntityBullet)) Hit(null);
 						nextPos.x = Mathf.RoundToInt(nextPos.x - width) + 1f;
 						velocity.x = mirrorSpeed ? -velocity.x : 0;
 					}
 				} else {
 					//Detect right collision
-					if(game.GetBlock(nextPos.x + width, nextPos.y - width2) ||
-						game.GetBlock(nextPos.x + width, nextPos.y + width)) {
+					if(instance.GetBlock(nextPos.x + width, nextPos.y - width2) ||
+						instance.GetBlock(nextPos.x + width, nextPos.y + width)) {
 						if(GetType() == typeof(EntityBullet)) Hit(null);
 						nextPos.x = Mathf.RoundToInt(nextPos.x + width) - 1f;
 						velocity.x = mirrorSpeed ? -velocity.x : 0;
@@ -95,8 +116,8 @@ namespace TwoWorlds.Lucrum {
 				}
 				if(velocity.y < 0) {
 					//Detect down collision
-					if(game.GetBlock(nextPos.x - width, nextPos.y - width) ||
-						game.GetBlock(nextPos.x + width, nextPos.y - width)) {
+					if(instance.GetBlock(nextPos.x - width, nextPos.y - width) ||
+						instance.GetBlock(nextPos.x + width, nextPos.y - width)) {
 						nextPos.y = Mathf.RoundToInt(nextPos.y - width) + 1f;
 						velocity.y = 0;
 						grounded = true;
@@ -105,9 +126,9 @@ namespace TwoWorlds.Lucrum {
 					}
 				} else {
 					//grounded = false;
-					if((int)(y + 1.5f) >= game.map.height || game.blocks[Mathf.RoundToInt(nextPos.x - width), Mathf.RoundToInt(nextPos.y + 0.5f)] || game.blocks[Mathf.RoundToInt(nextPos.x + width), Mathf.RoundToInt(nextPos.y + 0.5f)]) {
+					if((int)(y + 1.5f) >= instance.map.height || instance.blocks[Mathf.RoundToInt(nextPos.x - width), Mathf.RoundToInt(nextPos.y + 0.5f)] || instance.blocks[Mathf.RoundToInt(nextPos.x + width), Mathf.RoundToInt(nextPos.y + 0.5f)]) {
 						//Dodge to the right
-						if((nextPos.x % 1) < 0.25f && !game.blocks[Mathf.RoundToInt(nextPos.x + 1), Mathf.RoundToInt(nextPos.y + 0.5f)] && !game.blocks[Mathf.RoundToInt(nextPos.x + 1), Mathf.RoundToInt(nextPos.y)]) {
+						if((nextPos.x % 1) < 0.25f && !instance.blocks[Mathf.RoundToInt(nextPos.x + 1), Mathf.RoundToInt(nextPos.y + 0.5f)] && !instance.blocks[Mathf.RoundToInt(nextPos.x + 1), Mathf.RoundToInt(nextPos.y)]) {
 							nextPos.x = Mathf.RoundToInt(nextPos.x + 1);
 						} else {
 							velocity.y = 0;
@@ -115,13 +136,13 @@ namespace TwoWorlds.Lucrum {
 					}
 				}
 				bool top;
-				foreach(MarioEntityBase ent in game.entities) {
+				foreach(MarioEntityBase ent in instance.entities) {
 					if(ent == this) continue;
 					if(ent.DoesCollideWith(this, out top)) {
 						ent.OnCollidedWithEntity(this, top);
 					}
 				}
-				if(game.player != null && !(this is Player) && game.player.DoesCollideWith(this, out top)) game.player.OnCollidedWithEntity(this, top);
+				if(instance.player != null && !(this is Player) && instance.player.DoesCollideWith(this, out top)) instance.player.OnCollidedWithEntity(this, top);
 				t.localPosition = nextPos;
 			}
 
@@ -145,7 +166,7 @@ namespace TwoWorlds.Lucrum {
 
 			private int animationState;
 
-			public EnemyDefault(int x, int y, int vel) : base(game.enemy1Prefab, x, y, 0) {
+			public EnemyDefault(int x, int y, int vel) : base(instance.enemy1Prefab, x, y, 0) {
 				velocity.x = vel;
 			}
 
@@ -162,18 +183,18 @@ namespace TwoWorlds.Lucrum {
 
 			public override void Hit(MarioEntityBase source) {
 				//Hit = Kill
-				game.markForDelete.Add(this);
-				game.sound.PlayOneShot(game.hitSound);
-				game.OnEnemyKilled();
+				instance.markForDelete.Add(this);
+				instance.sound.PlayOneShot(instance.hitSound);
+				instance.OnEnemyKilled();
 				//Instantiate dead version
-				GameObject g = Instantiate(game.enemy1DeadPrefab);
+				GameObject g = Instantiate(instance.enemy1DeadPrefab);
 				Transform dt = g.transform;
-				dt.parent = game.transform;
+				dt.parent = instance.transform;
 				dt.localPosition = new Vector3(x, y, 0);
 				dt.localScale = new Vector3(1, 1, 1);
 				//Spawn the coins
-				for(int i = 0; i < game.coinsPerEnemy.Current; i++) {
-					game.SpawnCoin(x, y, Random.Range(-0.8f, 0.8f), Random.Range(0.8f, 1.2f));
+				for(int i = 0; i < instance.coinsPerEnemy.Current; i++) {
+					instance.SpawnCoin(x, y, Random.Range(-0.8f, 0.8f), Random.Range(0.8f, 1.2f));
 				}
 			}
 
@@ -192,7 +213,7 @@ namespace TwoWorlds.Lucrum {
 
 			const float fireInterval = 2f;
 
-			public EnemyRobber(int x, int y, int vel) : base(game.enemy2Prefab, x, y, 0) {
+			public EnemyRobber(int x, int y, int vel) : base(instance.enemy2Prefab, x, y, 0) {
 				velocity.x = vel;
 				walkSpeed = Mathf.Abs(vel);
 				facing = vel > 0 ? 1 : -1;
@@ -202,12 +223,12 @@ namespace TwoWorlds.Lucrum {
 			public override void Update() {
 				//Do the collision check
 				ApplyPhysics(true);
-				if(posY == game.player.posY) {
+				if(posY == instance.player.posY) {
 					fireTime -= Time.fixedDeltaTime;
-					if(Mathf.Abs(game.player.x - x) < 2 || fireTime < 0.5f) {
+					if(Mathf.Abs(instance.player.x - x) < 2 || fireTime < 0.5f) {
 						velocity.x = 0;
 					} else {
-						if(game.player.x < x) {
+						if(instance.player.x < x) {
 							velocity.x = -walkSpeed;
 						} else {
 							velocity.x = walkSpeed;
@@ -237,7 +258,7 @@ namespace TwoWorlds.Lucrum {
 			}
 
 			private void FireBullet() {
-				game.nextFiringEntity = this;
+				instance.nextFiringEntity = this;
 			}
 
 			public void OnFired() {
@@ -246,13 +267,13 @@ namespace TwoWorlds.Lucrum {
 
 			public override void Hit(MarioEntityBase source) {
 				//Hit = Kill
-				game.markForDelete.Add(this);
-				game.sound.PlayOneShot(game.hitSound);
-				game.OnEnemyKilled();
+				instance.markForDelete.Add(this);
+				instance.sound.PlayOneShot(instance.hitSound);
+				instance.OnEnemyKilled();
 				//Instantiate dead version
-				GameObject g = Instantiate(game.enemy2DeadPrefab);
+				GameObject g = Instantiate(instance.enemy2DeadPrefab);
 				Transform dt = g.transform;
-				dt.parent = game.transform;
+				dt.parent = instance.transform;
 				dt.localPosition = new Vector3(x, y, 0);
 				dt.localScale = t.localScale;
 			}
@@ -266,7 +287,7 @@ namespace TwoWorlds.Lucrum {
 
 			public EnemyRobber source;
 
-			public EntityBullet(float x, float y, float vel, EnemyRobber src) : base(game.bulletPrefab, x, y, 0.05f) {
+			public EntityBullet(float x, float y, float vel, EnemyRobber src) : base(instance.bulletPrefab, x, y, 0.05f) {
 				velocity.x = vel;
 				useGravity = false;
 				source = src;
@@ -275,15 +296,15 @@ namespace TwoWorlds.Lucrum {
 			public override void Update() {
 				//Do the collision check
 				ApplyPhysics(false);
-				if(Mathf.Abs(x - game.player.x) < 0.45f && Mathf.Abs(y - game.player.y) < 0.45f) {
-					game.player.Hit(this);
-					game.markForDelete.Add(this);
+				if(Mathf.Abs(x - instance.player.x) < 0.45f && Mathf.Abs(y - instance.player.y) < 0.45f) {
+					instance.player.Hit(this);
+					instance.markForDelete.Add(this);
 				}
 			}
 
 			public override void Hit(MarioEntityBase source) {
 				//Hit = Kill
-				game.markForDelete.Add(this);
+				instance.markForDelete.Add(this);
 			}
 
 			protected override void OnCollidedWithEntity(MarioEntityBase entity, bool top) {
@@ -301,7 +322,7 @@ namespace TwoWorlds.Lucrum {
 			private float remainingLifetime = 15;
 			private float lifetime = 0;
 
-			public EntityCoin(float x, float y, float velX, float velY) : base(game.coinPrefab, x, y, 0.025f) {
+			public EntityCoin(float x, float y, float velX, float velY) : base(instance.coinPrefab, x, y, 0.025f) {
 				velocity.x = velX;
 				velocity.y = velY;
 				velocity *= 10f;
@@ -320,12 +341,12 @@ namespace TwoWorlds.Lucrum {
 			}
 
 			public override void Update() {
-				if(lifetime > 0.5f && Mathf.Abs(x - game.player.x) < 0.5f && Mathf.Abs(y - game.player.y) < 0.5f) {
-					game.markForDelete.Add(this);
-					game.OnCoinCollected();
+				if(lifetime > 0.5f && Mathf.Abs(x - instance.player.x) < 0.5f && Mathf.Abs(y - instance.player.y) < 0.5f) {
+					instance.markForDelete.Add(this);
+					instance.OnCoinCollected();
 				}
 				if(remainingLifetime <= 0) {
-					game.markForDelete.Add(this);
+					instance.markForDelete.Add(this);
 				}
 				velocity.x = Mathf.Lerp(velocity.x, 0, Time.fixedDeltaTime * 1.5f);
 				var lvel = velocity;
@@ -356,7 +377,7 @@ namespace TwoWorlds.Lucrum {
 			float stepDist = 0;
 			int stepFrame = 0;
 
-			public Player(float x, float y) : base(game.playerPrefab, x, y, 0.05f) {
+			public Player(float x, float y) : base(instance.playerPrefab, x, y, 0.05f) {
 				t.name = "mario_player";
 				renderer = t.GetComponent<Renderer>();
 			}
@@ -365,7 +386,7 @@ namespace TwoWorlds.Lucrum {
 				if(Mathf.Abs(velocity.x) > 0.05f) {
 					lastDir = velocity.x < 0 ? -1 : 1;
 				}
-				if(alive) velocity.x = Mathf.Lerp(velocity.x, PlayerInputSystem.Move.ReadValue<Vector2>().x * game.playerSpeed, Time.fixedDeltaTime * 3f);
+				if(alive) velocity.x = Mathf.Lerp(velocity.x, PlayerInputSystem.Move.ReadValue<Vector2>().x * instance.playerSpeed, Time.fixedDeltaTime * 3f);
 				float lastX = Mathf.Abs(x);
 				//Do the collision check
 				ApplyPhysics(false);
@@ -389,10 +410,10 @@ namespace TwoWorlds.Lucrum {
 
 			public void Jump() {
 				if(!alive) return;
-				if(posX < 0 || posX >= game.map.width || posY < 0 || posY >= game.map.height || velocity.y > 0) return;
-				if(game.blocks[Mathf.RoundToInt(x - 0.4f), posY - 1] || game.blocks[Mathf.RoundToInt(x + 0.4f), posY - 1] && velocity.y < 0.05f) {
-					velocity.y = game.playerJump;
-					game.sound.PlayOneShot(game.jumpSound);
+				if(posX < 0 || posX >= instance.map.width || posY < 0 || posY >= instance.map.height || velocity.y > 0) return;
+				if(instance.blocks[Mathf.RoundToInt(x - 0.4f), posY - 1] || instance.blocks[Mathf.RoundToInt(x + 0.4f), posY - 1] && velocity.y < 0.05f) {
+					velocity.y = instance.playerJump;
+					instance.sound.PlayOneShot(instance.jumpSound);
 				}
 			}
 
@@ -425,7 +446,7 @@ namespace TwoWorlds.Lucrum {
 				}
 				t.localScale = new Vector3(source.x < x ? -1 : 1, 1, 1);
 				applyCollisions = true;
-				game.OnGameEnded();
+				instance.OnGameEnded();
 			}
 
 			public void MakeVictoryPose() {
@@ -436,7 +457,7 @@ namespace TwoWorlds.Lucrum {
 		#endregion
 
 		#region vars
-		public static LucrumGame game;
+		public static LucrumGame instance;
 
 		public Player player {
 			get => p;
@@ -488,7 +509,7 @@ namespace TwoWorlds.Lucrum {
 		#endregion
 
 		private void Start() {
-			game = this;
+			instance = this;
 			blocks = new Transform[map.width, map.height];
 			for(int x = 0; x < map.width; x++) {
 				for(int y = 0; y < map.height; y++) {
@@ -532,11 +553,6 @@ namespace TwoWorlds.Lucrum {
 
 		}
 
-		void OnCoinCollected() {
-			moneyCollected++;
-			coinCollectedSound.Play();
-		}
-
 		void Update() {
 			if(PlayerInputSystem.Jump.IsPressed()) {
 				player.Jump();
@@ -546,9 +562,9 @@ namespace TwoWorlds.Lucrum {
 		private void FixedUpdate() {
 			time += Time.fixedDeltaTime;
 			foreach(AnimatedBlock block in animatedBlocks) {
-				/*if(ticks % block.ticks == 0) {
-					block.mat.mainTextureOffset = new Vector2((block.mat.mainTextureOffset.x + (1f / block.xDiv)) % 1, 0);
-				}*/
+				//if(ticks % block.ticks == 0) {
+				//	block.mat.mainTextureOffset = new Vector2((block.mat.mainTextureOffset.x + (1f / block.xDiv)) % 1, 0);
+				//}
 			}
 			if(player != null) player.Update();
 			foreach(MarioEntityBase e in entities) e.Update();
@@ -619,5 +635,6 @@ namespace TwoWorlds.Lucrum {
 				Gizmos.DrawWireSphere(registeredGroundHits[i], 0.025f);
 			}
 		}
+		*/
 	}
 }

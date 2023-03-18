@@ -19,7 +19,6 @@ namespace TwoWorlds.SpaceShooter
 
 		public AnimationCurve spawnRateByScore = AnimationCurve.Linear(0, 0.2f, 10000, 1.0f);
 
-		public Text scoreText;
 		public Text healthText;
 
 		private List<SpaceEnemy> activeEnemies = new List<SpaceEnemy>();
