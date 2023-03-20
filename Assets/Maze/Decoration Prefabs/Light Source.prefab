@@ -178,7 +178,7 @@ MonoBehaviour:
   startDistance: 0
   endDistance: 3
   color: {r: 1, g: 1, b: 1, a: 1}
-  intensity: 0.15
+  intensity: 0.2
   intensityMultiplier: 1
   falloff:
     serializedVersion: 2
@@ -214,7 +214,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   rimSoftness: 3
-  material: {fileID: 2100000, guid: c8b4da2f9ca13bc4ca65533eb182a6c4, type: 2}
+  material: {fileID: 2100000, guid: d1988396f0a633e44b326874a207ff1d, type: 2}
   rangeMultiplier: 1
   radialSegments: 32
   subdivisions: 16

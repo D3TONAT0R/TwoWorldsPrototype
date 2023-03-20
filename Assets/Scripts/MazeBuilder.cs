@@ -118,7 +118,7 @@ namespace TwoWorlds
 
 		private void OnValidate()
 		{
-			if(autoRegenerate && this)
+			if(autoRegenerate && this != null && !Application.isPlaying)
 			{
 				this.InvokeValidation(() => Generate());
 			}

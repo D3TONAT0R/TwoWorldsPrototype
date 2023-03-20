@@ -37,7 +37,7 @@ namespace TwoWorlds
 		public static bool IsNormalMaze => SceneManager.GetActiveScene().name == mazeSceneName;
 		public static bool IsInfiniteMaze => SceneManager.GetActiveScene().name == infiniteMazeSceneName;
 
-		[StaticInit]
+		[RuntimeInitializeOnLoadMethod]
 		private static void Init()
 		{
 			gameSceneNames = new List<string>();

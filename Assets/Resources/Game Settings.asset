@@ -453,7 +453,8 @@ MonoBehaviour:
       width: 0
       height: 0
     colorValue: {r: 0, g: 0, b: 0, a: 0}
-    arrayValue: []
+    arrayValue:
+    - {fileID: 11400000, guid: 4b3f86ecbbf13064b9e33436825d3ce3, type: 2}
     classValue:
       id: 0
   - settingName: FPSLimit
@@ -478,6 +479,25 @@ MonoBehaviour:
   - settingName: CustomCursor
     value: 0
     objectValue: {fileID: 2800000, guid: ff0af8612c9928b4c8182a6135b7fb24, type: 3}
+    booleanValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    rectValue:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    arrayValue: []
+    classValue:
+      id: 0
+  - settingName: forceSuperScreenshots
+    value: 0
+    objectValue: {fileID: 0}
     booleanValue: 0
     intValue: 0
     floatValue: 0
