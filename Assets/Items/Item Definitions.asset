@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 552887ca02a14a34bad117694fbc7576, type: 3}
-  m_Name: Items
+  m_Name: Item Definitions
   m_EditorClassIdentifier: 
   definitions:
   - itemID: compass
@@ -25,6 +25,19 @@ MonoBehaviour:
     worldObjectPrefab: {fileID: 0}
     worldObjectDropRotation: {x: 0, y: 0, z: 0}
     handheldItemPrefab: {fileID: 2358995846821740337, guid: f7e14216eee8a60409a2fea0bdc4157d,
+      type: 3}
+  - itemID: torch
+    unlocalizedName: 
+    icon: {fileID: 0}
+    tags:
+      tags: []
+    maxStackSize:
+      backingValue: 1
+      hasValue: 0
+    weight: 0
+    worldObjectPrefab: {fileID: 0}
+    worldObjectDropRotation: {x: 0, y: 0, z: 0}
+    handheldItemPrefab: {fileID: 780991630727784536, guid: 14e65be871aafa8479ca93d0346577a6,
       type: 3}
   fallbackIcon: {fileID: 0}
   fallbackWorldObjectPrefab: {fileID: 0}
