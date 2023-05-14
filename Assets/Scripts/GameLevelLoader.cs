@@ -32,7 +32,7 @@ namespace TwoWorlds
 		public static MazeSettings nextMazeSettings;
 
 
-		public static bool IsGameWorld => gameSceneNames.Contains(SceneManager.GetActiveScene().name);
+		public static bool IsGameWorld => SceneManager.GetActiveScene().name.StartsWith("Game");
 		public static bool IsMazeWorld => IsNormalMaze || IsInfiniteMaze;
 		public static bool IsNormalMaze => SceneManager.GetActiveScene().name == mazeSceneName;
 		public static bool IsInfiniteMaze => SceneManager.GetActiveScene().name == infiniteMazeSceneName;
@@ -43,7 +43,7 @@ namespace TwoWorlds
 			gameSceneNames = new List<string>();
 			for(int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
 			{
-				var sceneName = SceneManager.GetSceneByBuildIndex(i).name;
+				var sceneName = System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));
 				if(sceneName != null && sceneName.StartsWith("Game-"))
 				{
 					gameSceneNames.Add(sceneName);
