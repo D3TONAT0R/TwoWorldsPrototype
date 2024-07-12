@@ -264,16 +264,29 @@ namespace TwoWorlds
 									instance.transform.localEulerAngles = new Vector3(0, dir.HorizontalAngle, 0);
 									if(prefab.placementRule == DecorationPrefab.PlacementRule.ReplaceWall && mazeGeometry.TryGetValue(pos, out var geometry))
 									{
-										string wallName;
-										if(dir == Direction.north) wallName = "N";
-										else if(dir == Direction.east) wallName = "E";
-										else if(dir == Direction.south) wallName = "S";
-										else wallName = "W";
+										//Respawn wall with opening
+										var newPiece = new MazePiece(2, piece.directions.ToArray());
+										newPiece.directions.Add(dir);
 
-										var wall = geometry.Find(wallName);
-										if(wall)
+										int pieceIndex = 0;
+										if(newPiece.North) pieceIndex += 1 << 3;
+										if(newPiece.East) pieceIndex += 1 << 2;
+										if(newPiece.South) pieceIndex += 1 << 1;
+										if(newPiece.West) pieceIndex += 1 << 0;
+										var newWallPrefab = mazePiecePrefabs.GetPiece(pieceIndex);
+
+										var newInstance = CreateInstanceOfPrefab(newWallPrefab);
+										newInstance.transform.localPosition = new Vector3(x * mazeScale, 0, z * mazeScale);
+										mazeGeometry[pos] = newInstance.transform;
+
+										//Destroy the old one
+										if (Application.isPlaying)
 										{
-											wall.gameObject.SetActive(false);
+											Destroy(geometry.gameObject);
+										}
+										else
+										{
+											DestroyImmediate(geometry.gameObject);
 										}
 									}
 								}

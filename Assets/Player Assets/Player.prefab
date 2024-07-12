@@ -959,7 +959,7 @@ MonoBehaviour:
   filterList: []
   stopNaNPropagation: 1
   finalBlitToCameraTarget: 0
-  antialiasingMode: 2
+  antialiasingMode: 0
   temporalAntialiasing:
     jitterSpread: 0.75
     sharpness: 0.25
@@ -1959,7 +1959,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableSerialization: 1
   persistentInventory:
-    enabled: 1
+    enabled: 0
     persistentInventoryID: player_inventory
   interaction:
     enabled: 0
