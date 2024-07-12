@@ -165,7 +165,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5251165778636795852}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39dad56542598fa4f94cabe3475852cb, type: 3}
   m_Name: 
@@ -174,11 +174,11 @@ MonoBehaviour:
   syncWithLight: 0
   spotAngle: 66.6
   spotAngleMultiplier: 1
-  lightSourceRadius: 0.3
+  lightSourceRadius: 0.4
   startDistance: 0
   endDistance: 3
   color: {r: 1, g: 1, b: 1, a: 1}
-  intensity: 0.2
+  intensity: 0.476
   intensityMultiplier: 1
   falloff:
     serializedVersion: 2
@@ -216,8 +216,8 @@ MonoBehaviour:
   rimSoftness: 3
   material: {fileID: 2100000, guid: d1988396f0a633e44b326874a207ff1d, type: 2}
   rangeMultiplier: 1
-  radialSegments: 32
-  subdivisions: 16
+  radialSegments: 8
+  subdivisions: 8
   rebuildMeshOnUpdate: 0
 --- !u!1 &6865323859498374325
 GameObject:
